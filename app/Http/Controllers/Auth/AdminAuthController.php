@@ -36,6 +36,12 @@ class AdminAuthController extends Controller
             // }
         }
 
+        $admin = auth()->guard('admin')->user();
+        if ($admin->ip !== $request->ip()) {
+            $admin->ip = $request->ip();   
+            $admin->save();
+        }
+
         return $this->createNewToken($token);
     }
 
@@ -62,7 +68,8 @@ class AdminAuthController extends Controller
 
         $adminData = array_merge(
             $validator->validated(),
-            ['password' => bcrypt($request->password)]
+            ['password' => bcrypt($request->password)],
+    ['ip' => $request->ip()]
         );
 
 

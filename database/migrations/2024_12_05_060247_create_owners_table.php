@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('address');
             $table->string('phoNum');
             $table->string('ownerType');
+            $table->string('ip')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

@@ -26,8 +26,11 @@ class OwnerAuthController extends Controller
                 'message' => 'Invalid data'
             ], 422);
 
+        $owner = auth()->guard('owner')->user();
+        if ($owner->ip !== $request->ip()) {
+            $owner->ip = $request->ip();   
+            $owner->save();
         }
-        // $owner = auth()->guard('owner')->user();
 
         return $this->createNewToken($token);
     }
@@ -52,13 +55,14 @@ class OwnerAuthController extends Controller
 
         $ownerData = array_merge(
             $validator->validated(),
-            ['password' => bcrypt($request->password)]
+            ['password' => bcrypt($request->password)],
+    ['ip' => $request->ip()]
         );
 
         $owner = owner::create($ownerData);
 
         // $owner->save();
-        // $admin->notify(new EmailVerificationNotification());
+        // $owner->notify(new EmailVerificationNotification());
 
         return response()->json([
             'message' => 'Owner Registration successful',

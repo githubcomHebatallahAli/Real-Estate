@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Support\Facades\Validator;
@@ -12,6 +11,7 @@ use App\Http\Resources\Auth\UserRegisterResource;
 
 class UserAuthController extends Controller
 {
+
     public function login(LoginRequest $request){
     	$validator = Validator::make($request->all(),$request->rules()
 
@@ -25,6 +25,11 @@ class UserAuthController extends Controller
             ], 422);
         }
 
+        $user = auth()->guard('api')->user();
+        if ($user->ip !== $request->ip()) {
+            $user->ip = $request->ip();
+            $user->save();
+        }
         return $this->createNewToken($token);
     }
 
@@ -39,7 +44,8 @@ class UserAuthController extends Controller
 
         $userData = array_merge(
             $validator->validated(),
-            ['password' => bcrypt($request->password)]
+            ['password' => bcrypt($request->password)],
+            ['ip' => $request->ip()]
         );
 
 

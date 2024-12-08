@@ -27,7 +27,11 @@ class BrokerAuthController extends Controller
             ], 422);
 
         }
-        // $broker = auth()->guard('broker')->user();
+        $broker = auth()->guard('broker')->user();
+        if ($broker->ip !== $request->ip()) {
+            $broker->ip = $request->ip(); 
+            $broker->save();
+        }
 
         return $this->createNewToken($token);
     }
@@ -48,13 +52,14 @@ class BrokerAuthController extends Controller
 
         $brokerData = array_merge(
             $validator->validated(),
-            ['password' => bcrypt($request->password)]
+            ['password' => bcrypt($request->password)],
+            ['ip' => $request->ip()]
         );
 
         $broker = Broker::create($brokerData);
 
         // $broker->save();
-        // $admin->notify(new EmailVerificationNotification());
+        // $broker->notify(new EmailVerificationNotification());
 
         return response()->json([
             'message' => 'Broker Registration successful',

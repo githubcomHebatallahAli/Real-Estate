@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('phoNum');
             $table->foreignId('role_id')->nullable()->constrained('roles')->cascadeOnDelete();
             $table->enum('status', ['active', 'notActive'])->default('active')->nullable();
+            $table->string('ip')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -36,5 +37,5 @@ return new class extends Migration
         Schema::dropIfExists('sessions');
     }
 
-  
+
 };
