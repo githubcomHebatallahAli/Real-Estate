@@ -21,6 +21,9 @@ return new class extends Migration
             $table->string('phoNum');
             $table->string('ownerType');
             $table->string('ip')->nullable();
+            $table->timestamp('last_login_at')->nullable();
+            $table->timestamp('last_logout_at')->nullable();
+            $table->integer('session_duration')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

@@ -9,6 +9,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\Auth\OwnerRegisterRequest;
 use App\Http\Resources\Auth\OwnerRegisterResource;
+use Carbon\Carbon;
 
 class OwnerAuthController extends Controller
 {
@@ -25,12 +26,17 @@ class OwnerAuthController extends Controller
             return response()->json([
                 'message' => 'Invalid data'
             ], 422);
+        }
 
         $owner = auth()->guard('owner')->user();
         if ($owner->ip !== $request->ip()) {
             $owner->ip = $request->ip();   
             $owner->save();
         }
+
+        $owner->update([
+            'last_login_at' => Carbon::now()->timezone('Africa/Cairo')
+        ]);
 
         return $this->createNewToken($token);
     }
@@ -78,17 +84,35 @@ class OwnerAuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
+    // public function logout()
+    // {
+    //     auth()->guard('owner')->logout();
+    //     return response()->json([
+    //         'message' => 'Owner successfully signed out'
+    //     ]);
+    // }
+
     public function logout()
     {
-        // if (!Gate::allows('logout', owner::class)) {
-        //     return response()->json(['message' => 'Unauthorized'], 403);
-        // }
+        
+        $owner = auth()->guard('owner')->user();
+    
+        if ($owner->last_login_at) {
+            $sessionDuration = Carbon::parse($owner->last_login_at)->diffInSeconds(Carbon::now());
+            
+            $owner->update([
+                'last_logout_at' => Carbon::now(),  
+                'session_duration' => $sessionDuration 
+            ]);
+        }
         auth()->guard('owner')->logout();
+    
         return response()->json([
-            'message' => 'Owner successfully signed out'
+            'message' => 'Owner successfully signed out',
+            'last_logout_at' => Carbon::now()->toDateTimeString(),  
+            'session_duration' => gmdate("H:i:s", $sessionDuration)  
         ]);
     }
-
     /**
      * Refresh a token.
      *
@@ -120,6 +144,9 @@ class OwnerAuthController extends Controller
      */
     protected function createNewToken($token)
     {
+        $owner = auth()->guard('owner')->user();
+        $owner->last_login_at = Carbon::parse($owner->last_login_at)
+        ->timezone('Africa/Cairo')->format('Y-m-d H:i:s');
         $owner = Owner::find(auth()->guard('owner')->id());
         return response()->json([
 

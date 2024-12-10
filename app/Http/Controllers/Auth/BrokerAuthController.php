@@ -9,6 +9,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\Auth\BrokerRegisterRequest;
 use App\Http\Resources\Auth\BrokerRegisterResource;
+use Carbon\Carbon;
 
 class BrokerAuthController extends Controller
 {
@@ -32,6 +33,10 @@ class BrokerAuthController extends Controller
             $broker->ip = $request->ip(); 
             $broker->save();
         }
+
+        $broker->update([
+            'last_login_at' => Carbon::now()->timezone('Africa/Cairo')
+        ]);
 
         return $this->createNewToken($token);
     }
@@ -75,11 +80,33 @@ class BrokerAuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
+    // public function logout()
+    // {
+    //     auth()->guard('broker')->logout();
+    //     return response()->json([
+    //         'message' => 'Broker successfully signed out'
+    //     ]);
+    // }
+
     public function logout()
     {
+        
+        $broker = auth()->guard('broker')->user();
+    
+        if ($broker->last_login_at) {
+            $sessionDuration = Carbon::parse($broker->last_login_at)->diffInSeconds(Carbon::now());
+            
+            $broker->update([
+                'last_logout_at' => Carbon::now(),  
+                'session_duration' => $sessionDuration 
+            ]);
+        }
         auth()->guard('broker')->logout();
+    
         return response()->json([
-            'message' => 'Broker successfully signed out'
+            'message' => 'Broker successfully signed out',
+            'last_logout_at' => Carbon::now()->toDateTimeString(),  
+            'session_duration' => gmdate("H:i:s", $sessionDuration)  
         ]);
     }
 
@@ -114,6 +141,9 @@ class BrokerAuthController extends Controller
      */
     protected function createNewToken($token)
     {
+        $broker = auth()->guard('broker')->user();
+        $broker->last_login_at = Carbon::parse($broker->last_login_at)
+        ->timezone('Africa/Cairo')->format('Y-m-d H:i:s');
         $broker = Broker::find(auth()->guard('broker')->id());
         return response()->json([
 

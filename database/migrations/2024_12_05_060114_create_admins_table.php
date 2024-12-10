@@ -22,6 +22,9 @@ return new class extends Migration
             $table->foreignId('role_id')->nullable()->constrained('roles')->cascadeOnDelete();
             $table->enum('status', ['active', 'notActive'])->default('active')->nullable();
             $table->string('ip')->nullable();
+            $table->timestamp('last_login_at')->nullable();
+            $table->timestamp('last_logout_at')->nullable();
+            $table->integer('session_duration')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

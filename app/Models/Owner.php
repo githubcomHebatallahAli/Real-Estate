@@ -18,7 +18,10 @@ class Owner extends Authenticatable  implements JWTSubject
         'password',
         'address',
         'phoNum',
-        'ownerType'
+        'ownerType',
+        'last_login_at',
+        'last_logout_at',
+        'session_duration', 
     ];
 
 
