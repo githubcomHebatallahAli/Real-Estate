@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Models\Owner;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Support\Facades\Validator;
@@ -13,31 +14,63 @@ use Carbon\Carbon;
 
 class OwnerAuthController extends Controller
 {
-    public function login(LoginRequest $request)
-    {
-        $validator = Validator::make($request->all(), $request->rules());
+    // public function login(LoginRequest $request)
+    // {
+    //     $validator = Validator::make($request->all(), $request->rules());
 
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+    //     if ($validator->fails()) {
+    //         return response()->json($validator->errors(), 422);
+    //     }
+
+    //     if (!$token = auth()->guard('owner')->attempt($validator->validated())) {
+    //         return response()->json([
+    //             'message' => 'Invalid data'
+    //         ], 422);
+    //     }
+
+    //     $owner = auth()->guard('owner')->user();
+    //     if ($owner->ip !== $request->ip()) {
+    //         $owner->ip = $request->ip();   
+    //         $owner->save();
+    //     }
+
+    //     $owner->update([
+    //         'last_login_at' => Carbon::now()->timezone('Africa/Cairo')
+    //     ]);
+
+    //     return $this->createNewToken($token);
+    // }
+
+    public function login(LoginRequest $request){
+
+
+        $credentials = $request->validated();
+
+        if (empty($credentials['email']) && empty($credentials['phoNum'])) {
+            return response()->json(['message' => 'Either email or phone number is required.'], 422);
         }
-
-        if (!$token = auth()->guard('owner')->attempt($validator->validated())) {
-            return response()->json([
-                'message' => 'Invalid data'
-            ], 422);
+    
+        if (!empty($credentials['email'])) {
+            $owner = Owner::where('email', $credentials['email'])->first();
+        } elseif (!empty($credentials['phoNum'])) {
+            $owner = Owner::where('phoNum', $credentials['phoNum'])->first();
         }
-
-        $owner = auth()->guard('owner')->user();
-        if ($owner->ip !== $request->ip()) {
-            $owner->ip = $request->ip();   
-            $owner->save();
+    
+        if (!$owner) {
+            return response()->json(['message' => 'Owner not found.'], 404);
         }
-
-        $owner->update([
-            'last_login_at' => Carbon::now()->timezone('Africa/Cairo')
-        ]);
-
+    
+        if (!Hash::check($credentials['password'], $owner->password)) {
+            return response()->json(['message' => 'Invalid credentials.'], 422);
+        }
+    
+        $token = auth()->guard('owner')->login($owner);
+    
+        if (!$token) {
+            return response()->json(['message' => 'Invalid Data'], 422);
+        }
+    
         return $this->createNewToken($token);
     }
 
@@ -49,9 +82,7 @@ class OwnerAuthController extends Controller
     // Register an Admin.
     public function register(OwnerRegisterRequest $request)
     {
-        // if (!Gate::allows('create', owner::class)) {
-        //     return response()->json(['message' => 'Unauthorized'], 403);
-        // }
+
 
         $validator = Validator::make($request->all(), $request->rules());
 
@@ -76,21 +107,6 @@ class OwnerAuthController extends Controller
         ]);
     }
 
-
-
-
-    /**
-     * Log the admin out (Invalidate the token).
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    // public function logout()
-    // {
-    //     auth()->guard('owner')->logout();
-    //     return response()->json([
-    //         'message' => 'Owner successfully signed out'
-    //     ]);
-    // }
 
     public function logout()
     {

@@ -25,10 +25,10 @@ class UserRegisterRequest extends FormRequest
     {
         return [
             'name' => 'required|string|between:2,100',
-            'email' => 'required|string|email|max:100|unique:users',
+            'email' => 'nullable|string|email|max:100|unique:users',
             'password' => 'required|string|confirmed|min:6',
-            'phoNum' =>'required|string',
-            'address' =>'required|string',
+            'phoNum' => 'required|string|unique:users',
+            'address' => 'required|string',
         ];
     }
 

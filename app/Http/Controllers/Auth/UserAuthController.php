@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\Auth\UserRegisterRequest;
 use App\Http\Resources\Auth\UserRegisterResource;
 use Carbon\Carbon;
@@ -14,34 +15,37 @@ class UserAuthController extends Controller
 {
 
     public function login(LoginRequest $request){
-    	$validator = Validator::make($request->all(),$request->rules()
 
-        );
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-        if (! $token = auth()->guard('api')->attempt($validator->validated())) {
-            return response()->json([
-                'message' => 'Invalid Data'
-            ], 422);
-        }
 
-        $user = auth()->guard('api')->user();
-        if ($user->ip !== $request->ip()) {
-            $user->ip = $request->ip();
-            $user->save();
-        }
-   
-        $user->update([
-            'last_login_at' => Carbon::now()->timezone('Africa/Cairo')
-        ]);
-      
+        $credentials = $request->validated();
 
-     
+        if (empty($credentials['email']) && empty($credentials['phoNum'])) {
+            return response()->json(['message' => 'Either email or phone number is required.'], 422);
+        }
+    
+        if (!empty($credentials['email'])) {
+            $user = User::where('email', $credentials['email'])->first();
+        } elseif (!empty($credentials['phoNum'])) {
+            $user = User::where('phoNum', $credentials['phoNum'])->first();
+        }
+    
+        if (!$user) {
+            return response()->json(['message' => 'User not found.'], 404);
+        }
+    
+        if (!Hash::check($credentials['password'], $user->password)) {
+            return response()->json(['message' => 'Invalid credentials.'], 422);
+        }
+    
+        $token = auth()->guard('api')->login($user);
+    
+        if (!$token) {
+            return response()->json(['message' => 'Invalid Data'], 422);
+        }
+    
         return $this->createNewToken($token);
     }
 
- 
 
     public function register(UserRegisterRequest $request) {
         $validator = Validator::make($request->all(), $request->rules());
@@ -66,12 +70,6 @@ class UserAuthController extends Controller
     }
 
 
-    // public function logout() {
-    //     auth()->guard('api')->logout();
-    //     return response()->json([
-    //         'message' => 'user successfully signed out'
-    //     ]);
-    // }
 
     public function logout()
 {
