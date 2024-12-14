@@ -6,8 +6,7 @@ use App\Http\Controllers\Auth\UserAuthController;
 use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\Auth\OwnerAuthController;
 use App\Http\Controllers\Auth\BrokerAuthController;
-use App\Http\Controllers\Auth\ParentAuthController;
-use App\Http\Controllers\Auth\StudentAuthController;
+
 
 
 
