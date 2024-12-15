@@ -80,13 +80,7 @@ class BrokerAuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    // public function logout()
-    // {
-    //     auth()->guard('broker')->logout();
-    //     return response()->json([
-    //         'message' => 'Broker successfully signed out'
-    //     ]);
-    // }
+  
 
     public function logout()
     {

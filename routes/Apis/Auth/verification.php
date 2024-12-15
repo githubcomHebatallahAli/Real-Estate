@@ -2,9 +2,9 @@
 
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\OTPController;
+use App\Http\Controllers\Auth\VerficationController;
 
-Route::controller(OTPController::class)->prefix('/otp')->group(
+Route::controller(VerficationController::class)->prefix('/otp')->group(
     function () {
 
 Route::post('/send',  'sendOtp');

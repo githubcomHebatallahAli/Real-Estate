@@ -4,14 +4,15 @@ namespace App\Http\Controllers\Auth;
 
 use Ichtrojan\Otp\Otp;
 
-use Twilio\Rest\Client;
+use Vonage\Client\Credentials\Basic;
+use Vonage\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\VerfiyOTPRequest;
 use App\Http\Requests\Auth\VerficationPhoNumRequest;
 
-class OTPController extends Controller
+class VerficationController extends Controller
 {
     private $otp;
 
@@ -96,24 +97,25 @@ class OTPController extends Controller
         ]);
     }
 
-    /**
-     * إرسال رسالة SMS باستخدام Twilio.
-     */
-    private function sendSms($phoNum, $message)
+    public function sendSms($to, $message)
     {
-        $sid = env('TWILIO_SID');
-        $token = env('TWILIO_AUTH_TOKEN');
-        $from = env('TWILIO_PHONE_NUMBER');
-
-        $client = new Client($sid, $token);
-
-        try {
-            $client->messages->create($phoNum, [
-                'from' => $from,
-                'body' => $message,
-            ]);
-        } catch (\Exception $e) {
-            throw new \Exception("Twilio SMS failed: " . $e->getMessage());
+        $testNumbers = ['+201114990063', '+201030124015']; // قائمة أرقام الاختبار المسجلة
+        $message = 'Hello, this is a test message using Vonage!';
+        $basic  = new Basic(env('VONAGE_API_KEY'), env('VONAGE_API_SECRET'));
+        $client = new Client($basic);
+    
+        $response = $client->sms()->send(
+            new \Vonage\SMS\Message\SMS($to, env('VONAGE_SMS_FROM'), $message)
+        );
+    
+        $message = $response->current();
+    
+        if ($message->getStatus() == 0) {
+            return 'Message sent successfully.';
+        } else {
+            return 'Message failed with status: ' . $message->getStatus();
         }
     }
+
+  
 }

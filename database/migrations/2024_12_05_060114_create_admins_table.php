@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('password');
             $table->string('address');
             $table->string('phoNum');
+            $table->boolean('is_verified')->default(false);
+            $table->timestamp('otp_sent_at')->nullable();
             $table->foreignId('role_id')->nullable()->constrained('roles')->cascadeOnDelete();
             $table->enum('status', ['active', 'notActive'])->default('active')->nullable();
             $table->string('ip')->nullable();

@@ -14,35 +14,31 @@ use Carbon\Carbon;
 class UserAuthController extends Controller
 {
 
-    public function login(LoginRequest $request){
+    public function login(LoginRequest $request)
+    {
+        $validator = Validator::make($request->all(), $request->rules());
 
 
-        $credentials = $request->validated();
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
 
-        if (empty($credentials['email']) && empty($credentials['phoNum'])) {
-            return response()->json(['message' => 'Either email or phone number is required.'], 422);
+        if (!$token = auth()->guard('api')->attempt($validator->validated())) {
+            return response()->json([
+                'message' => 'Invalid data'
+            ], 422);
         }
-    
-        if (!empty($credentials['email'])) {
-            $user = User::where('email', $credentials['email'])->first();
-        } elseif (!empty($credentials['phoNum'])) {
-            $user = User::where('phoNum', $credentials['phoNum'])->first();
+
+        $user = auth()->guard('api')->user();
+        if ($user->ip !== $request->ip()) {
+            $user->ip = $request->ip();   
+            $user->save();
         }
-    
-        if (!$user) {
-            return response()->json(['message' => 'User not found.'], 404);
-        }
-    
-        if (!Hash::check($credentials['password'], $user->password)) {
-            return response()->json(['message' => 'Invalid credentials.'], 422);
-        }
-    
-        $token = auth()->guard('api')->login($user);
-    
-        if (!$token) {
-            return response()->json(['message' => 'Invalid Data'], 422);
-        }
-    
+
+        $user->update([
+            'last_login_at' => Carbon::now()->timezone('Africa/Cairo')
+        ]);
+
         return $this->createNewToken($token);
     }
 

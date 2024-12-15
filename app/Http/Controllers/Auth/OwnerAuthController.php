@@ -14,65 +14,42 @@ use Carbon\Carbon;
 
 class OwnerAuthController extends Controller
 {
-    // public function login(LoginRequest $request)
-    // {
-    //     $validator = Validator::make($request->all(), $request->rules());
+    public function login(LoginRequest $request)
+    {
+        $validator = Validator::make($request->all(), $request->rules());
 
 
-    //     if ($validator->fails()) {
-    //         return response()->json($validator->errors(), 422);
-    //     }
-
-    //     if (!$token = auth()->guard('owner')->attempt($validator->validated())) {
-    //         return response()->json([
-    //             'message' => 'Invalid data'
-    //         ], 422);
-    //     }
-
-    //     $owner = auth()->guard('owner')->user();
-    //     if ($owner->ip !== $request->ip()) {
-    //         $owner->ip = $request->ip();   
-    //         $owner->save();
-    //     }
-
-    //     $owner->update([
-    //         'last_login_at' => Carbon::now()->timezone('Africa/Cairo')
-    //     ]);
-
-    //     return $this->createNewToken($token);
-    // }
-
-    public function login(LoginRequest $request){
-
-
-        $credentials = $request->validated();
-
-        if (empty($credentials['email']) && empty($credentials['phoNum'])) {
-            return response()->json(['message' => 'Either email or phone number is required.'], 422);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
         }
-    
-        if (!empty($credentials['email'])) {
-            $owner = Owner::where('email', $credentials['email'])->first();
-        } elseif (!empty($credentials['phoNum'])) {
-            $owner = Owner::where('phoNum', $credentials['phoNum'])->first();
+
+        if (!$token = auth()->guard('owner')->attempt($validator->validated())) {
+            return response()->json([
+                'message' => 'Invalid data'
+            ], 422);
         }
-    
-        if (!$owner) {
-            return response()->json(['message' => 'Owner not found.'], 404);
+
+        $owner = auth()->guard('owner')->user();
+
+        if (!$owner->is_verified) {
+            return response()->json([
+                'message' => 'Your account is not verified. Please verify your phone number.'
+            ], 403); // كود 403 يمثل الوصول المرفوض
         }
-    
-        if (!Hash::check($credentials['password'], $owner->password)) {
-            return response()->json(['message' => 'Invalid credentials.'], 422);
+        
+        if ($owner->ip !== $request->ip()) {
+            $owner->ip = $request->ip();   
+            $owner->save();
         }
-    
-        $token = auth()->guard('owner')->login($owner);
-    
-        if (!$token) {
-            return response()->json(['message' => 'Invalid Data'], 422);
-        }
-    
+
+        $owner->update([
+            'last_login_at' => Carbon::now()->timezone('Africa/Cairo')
+        ]);
+
         return $this->createNewToken($token);
     }
+
+ 
 
     /**
      * Register an Admin.
@@ -82,8 +59,6 @@ class OwnerAuthController extends Controller
     // Register an Admin.
     public function register(OwnerRegisterRequest $request)
     {
-
-
         $validator = Validator::make($request->all(), $request->rules());
 
         if ($validator->fails()) {
@@ -101,10 +76,29 @@ class OwnerAuthController extends Controller
         // $owner->save();
         // $owner->notify(new EmailVerificationNotification());
 
-        return response()->json([
-            'message' => 'Owner Registration successful',
-            'owner' =>new OwnerRegisterResource($owner)
-        ]);
+        // return response()->json([
+        //     'message' => 'Owner Registration successful',
+        //     'owner' =>new OwnerRegisterResource($owner)
+        // ]);
+
+        try {
+            $verificationController = new VerficationController();
+            $otpResponse = $verificationController->sendOtp(
+                new \App\Http\Requests\VerficationPhoNumRequest(['phoNum' => $user->phoNum])
+            );
+    
+            return response()->json([
+                'message' => 'Owner registration successful. Please verify your phone number.',
+                'user' => new OwnerRegisterResource($owner),
+                'otp_identifier' => $owner->phoNum,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Owner registration successful. However, OTP could not be sent. Please try resending it.',
+                'user' => new OwnerRegisterResource($user),
+                'error' => $e->getMessage(),
+            ], 201);
+        }
     }
 
 

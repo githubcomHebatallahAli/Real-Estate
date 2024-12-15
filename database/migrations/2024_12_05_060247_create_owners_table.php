@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('password');
             $table->string('address');
             $table->string('phoNum');
+            $table->boolean('is_verified')->default(false);
+            $table->timestamp('otp_sent_at')->nullable();
             $table->string('ownerType');
             $table->string('ip')->nullable();
             $table->timestamp('last_login_at')->nullable();
