@@ -9,9 +9,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Requests\VerficationPhoNumRequest;
+// use App\Http\Requests\VerficationPhoNumRequest;
 use App\Http\Requests\Auth\OwnerRegisterRequest;
 use App\Http\Resources\Auth\OwnerRegisterResource;
+use App\Http\Requests\Auth\VerficationPhoNumRequest;
 
 class OwnerAuthController extends Controller
 {
@@ -52,55 +53,49 @@ class OwnerAuthController extends Controller
 
 
 
-    /**
-     * Register an Admin.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    // Register an Admin.
     public function register(OwnerRegisterRequest $request)
     {
+        // التحقق من صحة البيانات
         $validator = Validator::make($request->all(), $request->rules());
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
         }
 
+        // دمج البيانات الإضافية مع البيانات المُتحققة
         $ownerData = array_merge(
             $validator->validated(),
             ['password' => bcrypt($request->password)],
             ['ip' => $request->ip()]
         );
 
+        // إنشاء السجل الجديد
         $owner = owner::create($ownerData);
-
-        // $owner->save();
-        // $owner->notify(new EmailVerificationNotification());
-
-        return response()->json([
-            'message' => 'Owner Registration successful',
-            'owner' =>new OwnerRegisterResource($owner)
-        ]);
-
         try {
             $verificationController = new VerficationController();
-            $otpResponse = $verificationController->sendOtp(
-                new VerficationPhoNumRequest(['phoNum' => $user->phoNum])
-            );
+
+            // إنشاء كائن VerficationPhoNumRequest
+            $request = new VerficationPhoNumRequest(['phoNum' => $owner->phoNum]);
+
+            // تمرير الكائن إلى sendOtp
+            $verificationController->sendOtp($request);
 
             return response()->json([
                 'message' => 'Owner registration successful. Please verify your phone number.',
-                'user' => new OwnerRegisterResource($owner),
+                'owner' => new OwnerRegisterResource($owner),
                 'otp_identifier' => $owner->phoNum,
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Owner registration successful. However, OTP could not be sent. Please try resending it.',
-                'user' => new OwnerRegisterResource($user),
+                'owner' => new OwnerRegisterResource($owner),
                 'error' => $e->getMessage(),
             ], 201);
         }
     }
+
+
+
 
 
     public function logout()
@@ -157,7 +152,7 @@ class OwnerAuthController extends Controller
     {
         $owner = auth()->guard('owner')->user();
         $owner->last_login_at = Carbon::parse($owner->last_login_at)
-        ->timezone('Africa/Cairo')->format('Y-m-d H:i:s');
+            ->timezone('Africa/Cairo')->format('Y-m-d H:i:s');
         $owner = Owner::find(auth()->guard('owner')->id());
         return response()->json([
 

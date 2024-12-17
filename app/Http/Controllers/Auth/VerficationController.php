@@ -117,5 +117,9 @@ class VerficationController extends Controller
     //     }
     // }
 
-
+    // public function sendOtp(array $data)
+    // {
+    //     $phoneNumber = $data['phoNum'];
+    //     // منطق إرسال OTP هنا
+    // }
 }
