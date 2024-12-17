@@ -21,25 +21,21 @@ class VerficationController extends Controller
         $this->otp = new Otp();
     }
 
-    /**
-     * إرسال كود OTP.
-     */
     public function sendOtp(VerficationPhoNumRequest $request)
     {
-        // $validatedData = $request->validate([
-        //     'phoNum' => 'required|string',
-        // ]);
+        // التأكد من أن الرقم هو نص
+        $phoNum = strval($request->phoNum);
 
         // إنشاء كود OTP جديد
-        $otp = $this->otp->generate($request->phoNum, 6, 10); // كود من 6 أرقام صالح لمدة 10 دقائق
+        $otp = $this->otp->generate($phoNum, 6, 10); // كود من 6 أرقام صالح لمدة 10 دقائق
 
         // إرسال كود OTP عن طريق Twilio
         try {
-            $this->sendSms($request->phoNum, "Your OTP is: " . $otp->token);
+            $this->sendSms($phoNum, "Your OTP is: " . $otp->token);
 
             return response()->json([
                 'message' => 'OTP sent successfully.',
-                'identifier' => $request->phoNum,
+                'identifier' => $phoNum,
             ]);
         } catch (\Exception $e) {
             Log::error("Failed to send OTP: " . $e->getMessage());
@@ -50,9 +46,8 @@ class VerficationController extends Controller
         }
     }
 
-    /**
-     * إعادة إرسال كود OTP.
-     */
+
+
     public function resendOtp(VerficationPhoNumRequest $request)
     {
         // $validatedData = $request->validate([

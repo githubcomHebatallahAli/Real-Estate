@@ -51,6 +51,30 @@ class OwnerAuthController extends Controller
         return $this->createNewToken($token);
     }
 
+    // public function register(OwnerRegisterRequest $request)
+    // {
+    //     $validator = Validator::make($request->all(), $request->rules());
+
+    //     if ($validator->fails()) {
+    //         return response()->json($validator->errors()->toJson(), 400);
+    //     }
+
+    //     $ownerData = array_merge(
+    //         $validator->validated(),
+    //         ['password' => bcrypt($request->password)],
+    //         ['ip' => $request->ip()]
+    //     );
+
+    //     $owner = Owner::create($ownerData);
+
+    //     // $owner->save();
+    //     // $owner->notify(new EmailVerificationNotification());
+
+    //     return response()->json([
+    //         'message' => 'owner Registration successful',
+    //         'owner' => new OwnerRegisterResource($owner)
+    //     ]);
+    // }
 
 
     public function register(OwnerRegisterRequest $request)

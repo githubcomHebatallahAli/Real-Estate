@@ -27,9 +27,9 @@ class VerficationPhoNumRequest extends FormRequest
         return [
             'phoNum' => [
                 'required',
-                 'string',
-                  new PhoneNumberExistsInTablesRule
-                ],
+                'string',
+                new PhoneNumberExistsInTablesRule
+            ],
 
         ];
     }
