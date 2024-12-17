@@ -59,8 +59,10 @@ class VerficationController extends Controller
         //     'phoNum' => 'required|string',
         // ]);
 
-        // إنشاء كود OTP جديد
-        $otp = $this->otp->generate($request->phoNum, 6, 10); // كود من 6 أرقام صالح لمدة 10 دقائق
+
+        Log::info("Generating OTP for {$request->phoNum}");
+        $otp = $this->otp->generate($request->phoNum, 6, 10);
+        Log::info("Generated OTP: ", ['otp' => $otp]); // كود من 6 أرقام صالح لمدة 10 دقائق
 
         // إرسال كود OTP عن طريق Twilio
         try {
@@ -97,29 +99,23 @@ class VerficationController extends Controller
         ]);
     }
 
-    // public function sendSms($to, $message)
-    // {
-    //     $testNumbers = ['+201114990063', '+201030124015']; // قائمة أرقام الاختبار المسجلة
-    //     $message = 'Hello, this is a test message using Vonage!';
-    //     $basic  = new Basic(env('VONAGE_API_KEY'), env('VONAGE_API_SECRET'));
-    //     $client = new Client($basic);
+    public function sendSms($to, $message)
+    {
+        $testNumbers = ['+201114990063', '+201030124015']; // قائمة أرقام الاختبار المسجلة
+        $message = 'Hello, this is a test message using Vonage!';
+        $basic  = new Basic(env('VONAGE_API_KEY'), env('VONAGE_API_SECRET'));
+        $client = new Client($basic);
 
-    //     $response = $client->sms()->send(
-    //         new \Vonage\SMS\Message\SMS($to, env('VONAGE_SMS_FROM'), $message)
-    //     );
+        $response = $client->sms()->send(
+            new \Vonage\SMS\Message\SMS($to, env('VONAGE_SMS_FROM'), $message)
+        );
 
-    //     $message = $response->current();
+        $message = $response->current();
 
-    //     if ($message->getStatus() == 0) {
-    //         return 'Message sent successfully.';
-    //     } else {
-    //         return 'Message failed with status: ' . $message->getStatus();
-    //     }
-    // }
-
-    // public function sendOtp(array $data)
-    // {
-    //     $phoneNumber = $data['phoNum'];
-    //     // منطق إرسال OTP هنا
-    // }
+        if ($message->getStatus() == 0) {
+            return 'Message sent successfully.';
+        } else {
+            return 'Message failed with status: ' . $message->getStatus();
+        }
+    }
 }
