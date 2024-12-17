@@ -69,7 +69,7 @@ class OwnerAuthController extends Controller
         $ownerData = array_merge(
             $validator->validated(),
             ['password' => bcrypt($request->password)],
-    ['ip' => $request->ip()]
+            ['ip' => $request->ip()]
         );
 
         $owner = owner::create($ownerData);
@@ -82,24 +82,24 @@ class OwnerAuthController extends Controller
             'owner' =>new OwnerRegisterResource($owner)
         ]);
 
-        // try {
-        //     $verificationController = new VerficationController();
-        //     $otpResponse = $verificationController->sendOtp(
-        //         new VerficationPhoNumRequest(['phoNum' => $user->phoNum])
-        //     );
+        try {
+            $verificationController = new VerficationController();
+            $otpResponse = $verificationController->sendOtp(
+                new VerficationPhoNumRequest(['phoNum' => $user->phoNum])
+            );
 
-        //     return response()->json([
-        //         'message' => 'Owner registration successful. Please verify your phone number.',
-        //         'user' => new OwnerRegisterResource($owner),
-        //         'otp_identifier' => $owner->phoNum,
-        //     ], 201);
-        // } catch (\Exception $e) {
-        //     return response()->json([
-        //         'message' => 'Owner registration successful. However, OTP could not be sent. Please try resending it.',
-        //         'user' => new OwnerRegisterResource($user),
-        //         'error' => $e->getMessage(),
-        //     ], 201);
-        // }
+            return response()->json([
+                'message' => 'Owner registration successful. Please verify your phone number.',
+                'user' => new OwnerRegisterResource($owner),
+                'otp_identifier' => $owner->phoNum,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Owner registration successful. However, OTP could not be sent. Please try resending it.',
+                'user' => new OwnerRegisterResource($user),
+                'error' => $e->getMessage(),
+            ], 201);
+        }
     }
 
 

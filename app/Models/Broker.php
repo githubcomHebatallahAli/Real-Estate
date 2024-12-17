@@ -21,7 +21,9 @@ class Broker extends Authenticatable  implements JWTSubject
         'targetPlace',
         'last_login_at',
         'last_logout_at',
-        'session_duration', 
+        'session_duration',
+        'is_verified',
+        'otp_sent_at', 
     ];
 
     protected $hidden = [
