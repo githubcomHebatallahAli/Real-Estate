@@ -31,7 +31,7 @@ class UserAuthController extends Controller
 
         $user = auth()->guard('api')->user();
         if ($user->ip !== $request->ip()) {
-            $user->ip = $request->ip();   
+            $user->ip = $request->ip();
             $user->save();
         }
 
@@ -56,8 +56,6 @@ class UserAuthController extends Controller
             ['ip' => $request->ip()]
         );
 
-
-
         $user = User::create($userData);
         return response()->json([
             'message' => 'user Registration successful',
@@ -69,23 +67,23 @@ class UserAuthController extends Controller
 
     public function logout()
 {
-    
+
     $user = auth()->guard('api')->user();
 
     if ($user->last_login_at) {
         $sessionDuration = Carbon::parse($user->last_login_at)->diffInSeconds(Carbon::now());
-        
+
         $user->update([
-            'last_logout_at' => Carbon::now(),  
-            'session_duration' => $sessionDuration 
+            'last_logout_at' => Carbon::now(),
+            'session_duration' => $sessionDuration
         ]);
     }
     auth()->guard('api')->logout();
 
     return response()->json([
         'message' => 'User successfully signed out',
-        'last_logout_at' => Carbon::now()->toDateTimeString(),  
-        'session_duration' => gmdate("H:i:s", $sessionDuration)  
+        'last_logout_at' => Carbon::now()->toDateTimeString(),
+        'session_duration' => gmdate("H:i:s", $sessionDuration)
     ]);
 }
 
@@ -110,8 +108,8 @@ class UserAuthController extends Controller
             'token_type' => 'bearer',
             'expires_in' => auth()->guard('api')->factory()->getTTL() * 60,
             'user' => auth()->guard('api')->user(),
-            
-            
+
+
 
         ]);
     }

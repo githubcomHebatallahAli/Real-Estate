@@ -97,25 +97,25 @@ class VerficationController extends Controller
         ]);
     }
 
-    public function sendSms($to, $message)
-    {
-        $testNumbers = ['+201114990063', '+201030124015']; // قائمة أرقام الاختبار المسجلة
-        $message = 'Hello, this is a test message using Vonage!';
-        $basic  = new Basic(env('VONAGE_API_KEY'), env('VONAGE_API_SECRET'));
-        $client = new Client($basic);
-    
-        $response = $client->sms()->send(
-            new \Vonage\SMS\Message\SMS($to, env('VONAGE_SMS_FROM'), $message)
-        );
-    
-        $message = $response->current();
-    
-        if ($message->getStatus() == 0) {
-            return 'Message sent successfully.';
-        } else {
-            return 'Message failed with status: ' . $message->getStatus();
-        }
-    }
+    // public function sendSms($to, $message)
+    // {
+    //     $testNumbers = ['+201114990063', '+201030124015']; // قائمة أرقام الاختبار المسجلة
+    //     $message = 'Hello, this is a test message using Vonage!';
+    //     $basic  = new Basic(env('VONAGE_API_KEY'), env('VONAGE_API_SECRET'));
+    //     $client = new Client($basic);
 
-  
+    //     $response = $client->sms()->send(
+    //         new \Vonage\SMS\Message\SMS($to, env('VONAGE_SMS_FROM'), $message)
+    //     );
+
+    //     $message = $response->current();
+
+    //     if ($message->getStatus() == 0) {
+    //         return 'Message sent successfully.';
+    //     } else {
+    //         return 'Message failed with status: ' . $message->getStatus();
+    //     }
+    // }
+
+
 }

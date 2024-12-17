@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Carbon\Carbon;
 use App\Models\Owner;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\VerficationPhoNumRequest;
 use App\Http\Requests\Auth\OwnerRegisterRequest;
 use App\Http\Resources\Auth\OwnerRegisterResource;
-use Carbon\Carbon;
 
 class OwnerAuthController extends Controller
 {
@@ -36,9 +37,9 @@ class OwnerAuthController extends Controller
                 'message' => 'Your account is not verified. Please verify your phone number.'
             ], 403); // كود 403 يمثل الوصول المرفوض
         }
-        
+
         if ($owner->ip !== $request->ip()) {
-            $owner->ip = $request->ip();   
+            $owner->ip = $request->ip();
             $owner->save();
         }
 
@@ -49,7 +50,7 @@ class OwnerAuthController extends Controller
         return $this->createNewToken($token);
     }
 
- 
+
 
     /**
      * Register an Admin.
@@ -76,51 +77,51 @@ class OwnerAuthController extends Controller
         // $owner->save();
         // $owner->notify(new EmailVerificationNotification());
 
-        // return response()->json([
-        //     'message' => 'Owner Registration successful',
-        //     'owner' =>new OwnerRegisterResource($owner)
-        // ]);
+        return response()->json([
+            'message' => 'Owner Registration successful',
+            'owner' =>new OwnerRegisterResource($owner)
+        ]);
 
-        try {
-            $verificationController = new VerficationController();
-            $otpResponse = $verificationController->sendOtp(
-                new \App\Http\Requests\VerficationPhoNumRequest(['phoNum' => $user->phoNum])
-            );
-    
-            return response()->json([
-                'message' => 'Owner registration successful. Please verify your phone number.',
-                'user' => new OwnerRegisterResource($owner),
-                'otp_identifier' => $owner->phoNum,
-            ], 201);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Owner registration successful. However, OTP could not be sent. Please try resending it.',
-                'user' => new OwnerRegisterResource($user),
-                'error' => $e->getMessage(),
-            ], 201);
-        }
+        // try {
+        //     $verificationController = new VerficationController();
+        //     $otpResponse = $verificationController->sendOtp(
+        //         new VerficationPhoNumRequest(['phoNum' => $user->phoNum])
+        //     );
+
+        //     return response()->json([
+        //         'message' => 'Owner registration successful. Please verify your phone number.',
+        //         'user' => new OwnerRegisterResource($owner),
+        //         'otp_identifier' => $owner->phoNum,
+        //     ], 201);
+        // } catch (\Exception $e) {
+        //     return response()->json([
+        //         'message' => 'Owner registration successful. However, OTP could not be sent. Please try resending it.',
+        //         'user' => new OwnerRegisterResource($user),
+        //         'error' => $e->getMessage(),
+        //     ], 201);
+        // }
     }
 
 
     public function logout()
     {
-        
+
         $owner = auth()->guard('owner')->user();
-    
+
         if ($owner->last_login_at) {
             $sessionDuration = Carbon::parse($owner->last_login_at)->diffInSeconds(Carbon::now());
-            
+
             $owner->update([
-                'last_logout_at' => Carbon::now(),  
-                'session_duration' => $sessionDuration 
+                'last_logout_at' => Carbon::now(),
+                'session_duration' => $sessionDuration
             ]);
         }
         auth()->guard('owner')->logout();
-    
+
         return response()->json([
             'message' => 'Owner successfully signed out',
-            'last_logout_at' => Carbon::now()->toDateTimeString(),  
-            'session_duration' => gmdate("H:i:s", $sessionDuration)  
+            'last_logout_at' => Carbon::now()->toDateTimeString(),
+            'session_duration' => gmdate("H:i:s", $sessionDuration)
         ]);
     }
     /**
