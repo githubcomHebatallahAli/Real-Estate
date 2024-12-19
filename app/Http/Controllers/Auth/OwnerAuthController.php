@@ -119,9 +119,6 @@ class OwnerAuthController extends Controller
     }
 
 
-
-
-
     public function logout()
     {
 

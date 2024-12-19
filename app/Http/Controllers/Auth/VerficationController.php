@@ -23,14 +23,17 @@ class VerficationController extends Controller
 
     public function sendOtp(VerficationPhoNumRequest $request)
     {
-        // التأكد من أن الرقم هو نص
-        $phoNum = strval($request->phoNum);
-
-        // إنشاء كود OTP جديد
-        $otp = $this->otp->generate($phoNum, 6, 10); // كود من 6 أرقام صالح لمدة 10 دقائق
-
-        // إرسال كود OTP عن طريق Twilio
         try {
+            $phoNum = strval($request->phoNum);
+
+            // التحقق من تنسيق الرقم
+            if (!preg_match('/^\+\d{10,15}$/', $phoNum)) {
+                throw new \Exception('Invalid phone number format.');
+            }
+
+            $otp = $this->otp->generate($phoNum, 6, 10); // توليد الرمز
+
+            // إرسال الرسالة
             $this->sendSms($phoNum, "Your OTP is: " . $otp->token);
 
             return response()->json([
@@ -42,9 +45,11 @@ class VerficationController extends Controller
 
             return response()->json([
                 'message' => 'Failed to send OTP. Please try again later.',
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
+
 
 
 
