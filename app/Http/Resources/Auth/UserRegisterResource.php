@@ -21,6 +21,7 @@ class UserRegisterResource extends JsonResource
             'phoNum' => $this -> phoNum ,
             'governorate' => $this -> governorate,
             'address' => $this -> address,
+            'image' => $this -> image,
         ];
     }
 }

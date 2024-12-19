@@ -32,6 +32,7 @@ class AdminRegisterRequest extends FormRequest
             'governorate' =>'required|string',
             'address' =>'required|string',
             'status' => 'nullable|in:active,notActive',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 

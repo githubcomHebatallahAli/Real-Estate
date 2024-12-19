@@ -33,6 +33,11 @@ class User extends Authenticatable implements JWTSubject
         'otp_sent_at',
     ];
 
+    public function image()
+    {
+        return $this->morphOne(Image::class, 'imageable');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

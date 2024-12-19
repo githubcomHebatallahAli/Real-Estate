@@ -21,7 +21,8 @@ class BrokerRegisterResource extends JsonResource
             'phoNum' => $this -> phoNum ,
             'governorate' => $this -> governorate,
             'address' => $this -> address,
-            'targetPlace' => $this -> targetPlace
+            'targetPlace' => $this -> targetPlace,
+            'image' => $this -> image,
         ];
 
     }

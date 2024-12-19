@@ -30,7 +30,7 @@ class BrokerAuthController extends Controller
         }
         $broker = auth()->guard('broker')->user();
         if ($broker->ip !== $request->ip()) {
-            $broker->ip = $request->ip(); 
+            $broker->ip = $request->ip();
             $broker->save();
         }
 
@@ -63,6 +63,12 @@ class BrokerAuthController extends Controller
 
         $broker = Broker::create($brokerData);
 
+        if ($request->hasFile('image')) {
+
+            $path = $request->file('image')->store('broker/images', 'public');
+            $broker->image()->create(['path' => $path]);
+        }
+
         // $broker->save();
         // $broker->notify(new EmailVerificationNotification());
 
@@ -80,27 +86,27 @@ class BrokerAuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-  
+
 
     public function logout()
     {
-        
+
         $broker = auth()->guard('broker')->user();
-    
+
         if ($broker->last_login_at) {
             $sessionDuration = Carbon::parse($broker->last_login_at)->diffInSeconds(Carbon::now());
-            
+
             $broker->update([
-                'last_logout_at' => Carbon::now(),  
-                'session_duration' => $sessionDuration 
+                'last_logout_at' => Carbon::now(),
+                'session_duration' => $sessionDuration
             ]);
         }
         auth()->guard('broker')->logout();
-    
+
         return response()->json([
             'message' => 'Broker successfully signed out',
-            'last_logout_at' => Carbon::now()->toDateTimeString(),  
-            'session_duration' => gmdate("H:i:s", $sessionDuration)  
+            'last_logout_at' => Carbon::now()->toDateTimeString(),
+            'session_duration' => gmdate("H:i:s", $sessionDuration)
         ]);
     }
 

@@ -30,7 +30,8 @@ class BrokerRegisterRequest extends FormRequest
             'phoNum' =>'required|string',
             'governorate' =>'required|string',
             'address' =>'required|string',
-            'targetPlace' =>'required|string'
+            'targetPlace' =>'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 

@@ -27,6 +27,11 @@ class Broker extends Authenticatable  implements JWTSubject
         'otp_sent_at',
     ];
 
+    public function image()
+    {
+        return $this->morphOne(Image::class, 'imageable');
+    }
+
     protected $hidden = [
         'password',
         'remember_token',

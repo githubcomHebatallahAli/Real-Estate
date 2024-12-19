@@ -30,7 +30,8 @@ class OwnerRegisterRequest extends FormRequest
             'phoNum' =>'required|string',
             'governorate' =>'required|string',
             'address' =>'required|string',
-            'ownerType' =>'required|string'
+            'ownerType' =>'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 

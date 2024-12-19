@@ -57,6 +57,12 @@ class UserAuthController extends Controller
         );
 
         $user = User::create($userData);
+
+        if ($request->hasFile('image')) {
+
+            $path = $request->file('image')->store('user/images', 'public');
+            $user->image()->create(['path' => $path]);
+        }
         return response()->json([
             'message' => 'user Registration successful',
             'user' => new UserRegisterResource($user)

@@ -24,6 +24,7 @@ class AdminRegisterResource extends JsonResource
             'status' => $this -> status,
             'governorate' => $this -> governorate,
             'address' => $this -> address,
+            'image' => $this -> image,
         ];
     }
 }
