@@ -28,6 +28,7 @@ class UserRegisterRequest extends FormRequest
             'email' => 'nullable|string|email|max:100|unique:users',
             'password' => 'required|string|confirmed|min:6',
             'phoNum' => 'required|string|unique:users',
+            'governorate' =>'required|string',
             'address' => 'required|string',
         ];
     }

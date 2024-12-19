@@ -22,6 +22,7 @@ class AdminRegisterResource extends JsonResource
             'role' => new RoleResource($this->role),
             'phoNum' => $this -> phoNum ,
             'status' => $this -> status,
+            'governorate' => $this -> governorate,
             'address' => $this -> address,
         ];
     }

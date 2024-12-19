@@ -19,6 +19,7 @@ class OwnerRegisterResource extends JsonResource
             'name'=>$this->name,
             'email'=>$this->email,
             'phoNum' => $this -> phoNum ,
+            'governorate' => $this -> governorate,
             'address' => $this -> address,
             'phoNum' => $this -> phoNum ,
             'ownerType' => $this -> ownerType

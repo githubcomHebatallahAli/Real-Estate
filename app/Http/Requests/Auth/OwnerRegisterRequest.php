@@ -28,6 +28,7 @@ class OwnerRegisterRequest extends FormRequest
             'email' => 'required|string|email|max:100|unique:brokers',
             'password' => 'required|string|confirmed|min:6',
             'phoNum' =>'required|string',
+            'governorate' =>'required|string',
             'address' =>'required|string',
             'ownerType' =>'required|string'
         ];
