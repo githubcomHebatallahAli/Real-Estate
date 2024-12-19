@@ -98,9 +98,11 @@ class OwnerAuthController extends Controller
 
         if ($request->hasFile('image')) {
 
-            $path = $request->file('image')->store('owner/images', 'public');
+            $path = $request->file('image')->store('owner', 'public');
             $owner->image()->create(['path' => $path]);
         }
+
+        $owner->load('image');
         try {
             $verificationController = new VerficationController();
 

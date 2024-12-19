@@ -83,9 +83,11 @@ class AdminAuthController extends Controller
 
         if ($request->hasFile('image')) {
 
-            $path = $request->file('image')->store('admin/images', 'public');
+            $path = $request->file('image')->store('admin', 'public');
             $admin->image()->create(['path' => $path]);
         }
+
+        $admin->load('image');
 
         $admin->save();
         // $admin->notify(new EmailVerificationNotification());

@@ -60,9 +60,11 @@ class UserAuthController extends Controller
 
         if ($request->hasFile('image')) {
 
-            $path = $request->file('image')->store('user/images', 'public');
+            $path = $request->file('image')->store('user', 'public');
             $user->image()->create(['path' => $path]);
         }
+
+        $user->load('image');
         return response()->json([
             'message' => 'user Registration successful',
             'user' => new UserRegisterResource($user)

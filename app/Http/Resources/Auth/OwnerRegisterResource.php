@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Auth;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\ImageResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OwnerRegisterResource extends JsonResource
@@ -23,7 +24,7 @@ class OwnerRegisterResource extends JsonResource
             'address' => $this -> address,
             'phoNum' => $this -> phoNum ,
             'ownerType' => $this -> ownerType,
-            'image' => $this -> image,
+            'image' => new ImageResource($this->whenLoaded('image')),
         ];
     }
 }

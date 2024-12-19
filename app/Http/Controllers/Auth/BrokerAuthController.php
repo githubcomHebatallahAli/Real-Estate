@@ -65,9 +65,11 @@ class BrokerAuthController extends Controller
 
         if ($request->hasFile('image')) {
 
-            $path = $request->file('image')->store('broker/images', 'public');
+            $path = $request->file('image')->store('broker', 'public');
             $broker->image()->create(['path' => $path]);
         }
+
+        $broker->load('image');
 
         // $broker->save();
         // $broker->notify(new EmailVerificationNotification());
