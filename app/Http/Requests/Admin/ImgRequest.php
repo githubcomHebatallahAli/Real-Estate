@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
-class RoleRequest extends FormRequest
+class ImgRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,7 @@ class RoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-              'name'=>'required|string'
+            'image.*'=>'nullable|image|mimes:jpg,jpeg,png,gif,svg',
         ];
     }
 

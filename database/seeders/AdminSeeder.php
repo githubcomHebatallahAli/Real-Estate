@@ -19,9 +19,11 @@ class AdminSeeder extends Seeder
             'email' => 'superAdmin@mail.com',
             'password' => Hash::make('superAdmin@123'),
             'phoNum'=>'0111223344',
+            'governorate' => 'Sohag',
             'address' => 'Naser City',
             'role_id' => '1',
-            'status' => 'active'
+            'status' => 'active',
+
         ]);
     }
 }

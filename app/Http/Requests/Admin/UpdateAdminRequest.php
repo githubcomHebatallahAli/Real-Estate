@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
-class RoleRequest extends FormRequest
+class UpdateAdminRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,16 +24,14 @@ class RoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-              'name'=>'required|string'
-        ];
-    }
+            'name' => 'required|string|between:2,100',
+            'email' => 'required|string|email|max:100|unique:admins,email,' . $this->route('id'),
+            'role_id' => 'required|string',
+            'phoNum' =>'required|string',
+            'status' => 'nullable|string',
+            'governorate' => 'required|string',
+            'address' => 'required|string',
 
-    public function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(response()->json([
-            'success'   => false,
-            'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ]));
+        ];
     }
 }
