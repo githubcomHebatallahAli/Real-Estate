@@ -140,7 +140,7 @@ class VerficationController extends Controller
         $client = new Client($basic);
 
         $response = $client->sms()->send(
-            new \Vonage\SMS\Message\SMS($to, env('VONAGE_SMS_FROM'), $message)
+            new \Vonage\SMS\Message\SMS($to, env('VONAGE_FROM'), $message)
         );
 
         $message = $response->current();
