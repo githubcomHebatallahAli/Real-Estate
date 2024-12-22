@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\Auth\UserRegisterRequest;
 use App\Http\Resources\Auth\UserRegisterResource;
-use Carbon\Carbon;
+use App\Http\Requests\Auth\VerficationPhoNumRequest;
 
 class UserAuthController extends Controller
 {
@@ -30,6 +31,13 @@ class UserAuthController extends Controller
         }
 
         $user = auth()->guard('api')->user();
+
+        if (!$user->is_verified) {
+            return response()->json([
+                'message' => 'Your account is not verified. Please verify your phone number.'
+            ], 403);
+        }
+
         if ($user->ip !== $request->ip()) {
             $user->ip = $request->ip();
             $user->save();
@@ -67,8 +75,32 @@ class UserAuthController extends Controller
         }
 
         $user->load('image');
+        
+        try {
+            $verificationController = new VerficationController();
+
+            $request = new VerficationPhoNumRequest(['phoNum' => $user->phoNum]);
+
+            $verificationController->sendOtp($request);
+
+            return response()->json([
+                'message' => 'User registration successful. Please verify your phone number.',
+                'user' => new UserRegisterResource($user),
+                'otp_identifier' => $user->phoNum,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'User registration successful. However, OTP could not be sent. Please try resending it.',
+                'user' => new UserRegisterResource($user),
+                'error' => $e->getMessage(),
+            ], 201);
+        }
         return response()->json([
-            'message' => 'user Registration successful',
+            'message' => 'User Registration successful',
+            'user' =>new UserRegisterResource($user)
+        ]);
+        return response()->json([
+            'message' => 'User Registration successful',
             'user' => new UserRegisterResource($user)
         ], 201);
     }
