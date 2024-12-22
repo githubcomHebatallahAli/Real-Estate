@@ -39,7 +39,7 @@ class AdminAuthController extends Controller
 
         $admin = auth()->guard('admin')->user();
         if ($admin->ip !== $request->ip()) {
-            $admin->ip = $request->ip();   
+            $admin->ip = $request->ip();
             $admin->save();
         }
 
@@ -81,6 +81,14 @@ class AdminAuthController extends Controller
 
         $admin = Admin::create($adminData);
 
+        if ($request->hasFile('image')) {
+
+            $path = $request->file('image')->store('admin', 'public');
+            $admin->image()->create(['path' => $path]);
+        }
+
+        $admin->load('image');
+
         $admin->save();
         // $admin->notify(new EmailVerificationNotification());
 
@@ -108,30 +116,30 @@ class AdminAuthController extends Controller
         }
 
         $admin = auth()->guard('admin')->user();
-    
+
         if ($admin) {
             if ($admin->last_login_at) {
                 $sessionDuration = Carbon::parse($admin->last_login_at)->diffInSeconds(Carbon::now());
-                
+
                 $admin->update([
-                    'last_logout_at' => Carbon::now(),  
+                    'last_logout_at' => Carbon::now(),
                     'session_duration' => $sessionDuration
                 ]);
             }
-        
+
             auth()->guard('admin')->logout();
             return response()->json([
                 'message' => 'Admin successfully signed out',
-                'last_logout_at' => Carbon::now()->toDateTimeString(),  
-                'session_duration' => gmdate("H:i:s", $sessionDuration)  
+                'last_logout_at' => Carbon::now()->toDateTimeString(),
+                'session_duration' => gmdate("H:i:s", $sessionDuration)
             ]);
         }
-    
+
         return response()->json([
             'message' => 'Admin not found'
         ], 404);
     }
-    
+
 
     /**
      * Refresh a token.

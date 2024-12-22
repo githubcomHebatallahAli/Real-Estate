@@ -16,6 +16,7 @@ class Admin extends Authenticatable  implements JWTSubject
         'name',
         'email',
         'password',
+        'governorate',
         'address',
         'phoNum',
         'role_id',
@@ -30,6 +31,11 @@ class Admin extends Authenticatable  implements JWTSubject
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function image()
+    {
+        return $this->morphOne(Image::class, 'imageable');
     }
 
     protected $hidden = [

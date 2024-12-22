@@ -29,8 +29,10 @@ class AdminRegisterRequest extends FormRequest
             'password' => 'required|string|confirmed|min:6',
             'role_id' => 'nullable|exists:roles,id',
             'phoNum' =>'required|string',
+            'governorate' =>'required|string',
             'address' =>'required|string',
             'status' => 'nullable|in:active,notActive',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 

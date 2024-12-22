@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Auth;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\ImageResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class BrokerRegisterResource extends JsonResource
@@ -19,8 +20,12 @@ class BrokerRegisterResource extends JsonResource
             'name'=>$this->name,
             'email'=>$this->email,
             'phoNum' => $this -> phoNum ,
+            'governorate' => $this -> governorate,
             'address' => $this -> address,
-            'targetPlace' => $this -> targetPlace
+            'targetPlace' => $this -> targetPlace,
+            'userType' => $this -> userType,
+            'commission' => $this -> commission,
+            'image' => new ImageResource($this->whenLoaded('image')),
         ];
 
     }

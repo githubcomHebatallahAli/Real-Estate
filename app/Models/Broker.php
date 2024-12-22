@@ -16,15 +16,23 @@ class Broker extends Authenticatable  implements JWTSubject
         'name',
         'email',
         'password',
+        'governorate',
         'address',
         'phoNum',
         'targetPlace',
+        'userType',
+        'commission',
         'last_login_at',
         'last_logout_at',
         'session_duration',
         'is_verified',
         'otp_sent_at',
     ];
+
+    public function image()
+    {
+        return $this->morphOne(Image::class, 'imageable');
+    }
 
     public function ratings()
     {

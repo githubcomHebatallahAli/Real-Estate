@@ -17,7 +17,6 @@ class PhoneNumberExistsInTablesRule implements ValidationRule
     {
         $exists = DB::table('users')->where('phoNum', $value)->exists() ||
         DB::table('admins')->where('phoNum', $value)->exists() ||
-        DB::table('owners')->where('phoNum', $value)->exists() ||
         DB::table('brokers')->where('phoNum', $value)->exists();
 
 if ($exists) {

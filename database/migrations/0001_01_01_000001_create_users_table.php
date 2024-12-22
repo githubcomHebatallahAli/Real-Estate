@@ -17,7 +17,10 @@ return new class extends Migration
             $table->string('email')->unique()->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('governorate');
             $table->string('address');
+            $table->string('userType')->nullable()->default('user');
+            // $table->enum('userType', ['user', 'broker'])->default('user');
             $table->string('phoNum')->unique()->nullable();
             $table->boolean('is_verified')->default(false);
             $table->timestamp('otp_sent_at')->nullable();

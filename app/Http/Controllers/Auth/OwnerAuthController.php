@@ -95,6 +95,14 @@ class OwnerAuthController extends Controller
 
         // إنشاء السجل الجديد
         $owner = owner::create($ownerData);
+
+        if ($request->hasFile('image')) {
+
+            $path = $request->file('image')->store('owner', 'public');
+            $owner->image()->create(['path' => $path]);
+        }
+
+        $owner->load('image');
         try {
             $verificationController = new VerficationController();
 

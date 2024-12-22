@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Auth;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\ImageResource;
 use App\Http\Resources\Admin\RoleResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -22,7 +23,9 @@ class AdminRegisterResource extends JsonResource
             'role' => new RoleResource($this->role),
             'phoNum' => $this -> phoNum ,
             'status' => $this -> status,
+            'governorate' => $this -> governorate,
             'address' => $this -> address,
+            'image' => new ImageResource($this->whenLoaded('image')),
         ];
     }
 }

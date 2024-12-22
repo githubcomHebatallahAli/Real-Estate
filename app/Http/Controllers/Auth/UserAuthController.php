@@ -53,10 +53,20 @@ class UserAuthController extends Controller
         $userData = array_merge(
             $validator->validated(),
             ['password' => bcrypt($request->password)],
-            ['ip' => $request->ip()]
+            ['ip' => $request->ip()],
+            ['userType' => $request->userType ?? 'user']
+
         );
 
         $user = User::create($userData);
+
+        if ($request->hasFile('image')) {
+
+            $path = $request->file('image')->store('user', 'public');
+            $user->image()->create(['path' => $path]);
+        }
+
+        $user->load('image');
         return response()->json([
             'message' => 'user Registration successful',
             'user' => new UserRegisterResource($user)
