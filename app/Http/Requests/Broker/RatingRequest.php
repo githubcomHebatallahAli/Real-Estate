@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Auth;
+namespace App\Http\Requests\Broker;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
-class OwnerRegisterRequest extends FormRequest
+class RatingRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,14 +24,8 @@ class OwnerRegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|between:2,100',
-            'email' => 'required|string|email|max:100|unique:brokers',
-            'password' => 'required|string|confirmed|min:6',
-            'phoNum' =>'required|string',
-            'governorate' =>'required|string',
-            'address' =>'required|string',
-            'ownerType' =>'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'rating'=>'required|integer|min:1|max:5',
+            'comment'=>'nullable|string'
         ];
     }
 

@@ -58,7 +58,8 @@ class BrokerAuthController extends Controller
         $brokerData = array_merge(
             $validator->validated(),
             ['password' => bcrypt($request->password)],
-            ['ip' => $request->ip()]
+            ['ip' => $request->ip()],
+            ['userType' => $request->userType ?? 'broker']
         );
 
         $broker = Broker::create($brokerData);

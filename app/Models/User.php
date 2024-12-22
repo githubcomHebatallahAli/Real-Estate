@@ -26,6 +26,7 @@ class User extends Authenticatable implements JWTSubject
         'governorate',
         'address',
         'phoNum',
+        'userType',
         'last_login_at',
         'last_logout_at',
         'session_duration',

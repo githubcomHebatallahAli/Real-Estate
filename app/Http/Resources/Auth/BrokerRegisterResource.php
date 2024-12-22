@@ -23,6 +23,8 @@ class BrokerRegisterResource extends JsonResource
             'governorate' => $this -> governorate,
             'address' => $this -> address,
             'targetPlace' => $this -> targetPlace,
+            'userType' => $this -> userType,
+            'commission' => $this -> commission,
             'image' => new ImageResource($this->whenLoaded('image')),
         ];
 

@@ -53,7 +53,9 @@ class UserAuthController extends Controller
         $userData = array_merge(
             $validator->validated(),
             ['password' => bcrypt($request->password)],
-            ['ip' => $request->ip()]
+            ['ip' => $request->ip()],
+            ['userType' => $request->userType ?? 'user']
+
         );
 
         $user = User::create($userData);

@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('governorate');
             $table->string('address');
             $table->string('phoNum');
+            $table->string('userType')->nullable()->default('broker');
+            $table->string('commission');
             $table->boolean('is_verified')->default(false);
             $table->timestamp('otp_sent_at')->nullable();
             $table->string('targetPlace');

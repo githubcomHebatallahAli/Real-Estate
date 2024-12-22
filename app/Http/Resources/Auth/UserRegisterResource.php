@@ -22,6 +22,7 @@ class UserRegisterResource extends JsonResource
             'phoNum' => $this -> phoNum ,
             'governorate' => $this -> governorate,
             'address' => $this -> address,
+            'userType' => $this -> userType,
             'image' => new ImageResource($this->whenLoaded('image')),
         ];
     }
