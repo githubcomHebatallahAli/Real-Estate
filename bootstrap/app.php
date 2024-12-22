@@ -18,7 +18,6 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'auth' => \App\Http\Middleware\AuthenticateMiddleware::class,
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
-            'owner' => \App\Http\Middleware\OwnerMiddleware::class,
             'broker' => \App\Http\Middleware\BrokerMiddleware::class,
             'proxies' => \App\Http\Middleware\TrustProxies::class,
     ]);

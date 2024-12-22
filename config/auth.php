@@ -59,12 +59,6 @@ return [
             'hash' => false,
         ],
 
-        'owner' => [
-            'driver' => 'jwt',
-            'provider' => 'owners',
-            'hash' => false,
-        ],
-
         'broker' => [
             'driver' => 'jwt',
             'provider' => 'brokers',
@@ -103,11 +97,6 @@ return [
         'admins' => [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
-        ],
-
-        'owners' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Owner::class,
         ],
 
         'brokers' => [
@@ -150,13 +139,6 @@ return [
             'throttle' => 60,
         ],
 
-        'owners' => [
-            'provider' => 'owners',
-            'table' => 'password_resets',
-            'expire' => 60,
-            'throttle' => 60,
-        ],
-        
         'brokers' => [
             'provider' => 'brokers',
             'table' => 'password_resets',

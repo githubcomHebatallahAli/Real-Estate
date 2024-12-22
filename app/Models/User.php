@@ -29,7 +29,7 @@ class User extends Authenticatable implements JWTSubject
         'last_logout_at',
         'session_duration',
         'is_verified',
-        'otp_sent_at', 
+        'otp_sent_at',
     ];
 
     /**
@@ -37,6 +37,9 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array<int, string>
      */
+
+    
+
     protected $hidden = [
         'password',
         'remember_token',
