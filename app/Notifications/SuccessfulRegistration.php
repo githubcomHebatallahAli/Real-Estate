@@ -32,9 +32,11 @@ class SuccessfulRegistration extends Notification
 
     public function toVonage($notifiable)
     {
-        return (new VonageMessage())
-            ->content("Your OTP code is: {$this->otp}");
+        return (new VonageMessage)
+            ->from(config('services.vonage.vonage_from')) // الرقم الذي ستُرسل منه الرسالة
+            ->content('Welcome to My App, ' .  '! Your OTP is: ' . $this->otp);
     }
+
 
     /**
      * Get the notification's delivery channels.
