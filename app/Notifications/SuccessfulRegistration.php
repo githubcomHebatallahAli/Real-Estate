@@ -7,6 +7,8 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\VonageMessage;
+use Vonage\Client;
+use Vonage\Client\Credentials\Basic;
 
 class SuccessfulRegistration extends Notification
 {
@@ -17,12 +19,14 @@ class SuccessfulRegistration extends Notification
      */
 
 
-    private $otp;
+     private $otp;
+     private $name;
 
-    public function __construct($otp)
-    {
-        $this->otp = $otp;
-    }
+     public function __construct($otp, $name)
+     {
+         $this->otp = $otp;
+         $this->name = $name;
+     }
 
     public function via(object $notifiable): array
     {
@@ -32,9 +36,13 @@ class SuccessfulRegistration extends Notification
 
     public function toVonage($notifiable)
     {
-        return (new VonageMessage)
-            ->from(config('services.vonage.vonage_from')) // الرقم الذي ستُرسل منه الرسالة
-            ->content('Welcome to My App, ' .  '! Your OTP is: ' . $this->otp);
+        $client = new Client(new Basic(config('services.vonage.vonage_api_key'), config('services.vonage.vonage_api_secret')));
+
+        $message = $client->message()->send([
+            'to' => $notifiable->phoNum,
+            'from' => config('services.vonage.vonage_from'),
+            'text' => 'Welcome to My App, ' . $this->name . '! Your OTP is: ' . $this->otp,
+        ]);
     }
 
 
