@@ -97,7 +97,7 @@ class VerficationController extends Controller
         $otp = $this->otp->generate($request->phoNum, 6, 10);
         Log::info("Generated OTP: ", ['otp' => $otp]); // كود من 6 أرقام صالح لمدة 10 دقائق
 
-        // إرسال كود OTP عن طريق Twilio
+       
         try {
             $this->sendSms($request->phoNum, "Your OTP is: " . $otp->token);
 

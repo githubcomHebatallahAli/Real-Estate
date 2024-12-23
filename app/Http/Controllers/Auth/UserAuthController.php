@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Support\Facades\Validator;
+use App\Notifications\SuccessfulRegistration;
 use App\Http\Requests\Auth\UserRegisterRequest;
 use App\Http\Resources\Auth\UserRegisterResource;
 use App\Http\Requests\Auth\VerficationPhoNumRequest;
@@ -75,13 +76,15 @@ class UserAuthController extends Controller
         }
 
         $user->load('image');
-        
-        try {
-            $verificationController = new VerficationController();
+        $otp = rand(100000, 999999);
+        $user->notify(new SuccessfulRegistration($otp));
 
-            $request = new VerficationPhoNumRequest(['phoNum' => $user->phoNum]);
+        // try {
+        //     $verificationController = new VerficationController();
 
-            $verificationController->sendOtp($request);
+            // $request = new VerficationPhoNumRequest(['phoNum' => $user->phoNum]);
+
+            // $verificationController->sendOtp($request);
 
             return response()->json([
                 'message' => 'User registration successful. Please verify your phone number.',
