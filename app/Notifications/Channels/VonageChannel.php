@@ -2,9 +2,7 @@
 
 namespace App\Notifications\Channels;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
+
 use Illuminate\Notifications\Notification;
 use Vonage\Client;
 use Vonage\SMS\Message\SMS;
@@ -24,12 +22,12 @@ class VonageChannel
         $this->client = $client;
     }
 
-    // إرسال الرسالة
     public function send($notifiable, Notification $notification)
     {
+        // الحصول على الرسالة من الإشعار
         $message = $notification->toVonage($notifiable);
 
-
+        // التأكد من أن الرسالة هي كائن من نوع SMS
         if ($message instanceof SMS) {
             $this->client->sms()->send($message);
         }
