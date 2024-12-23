@@ -12,12 +12,8 @@ class NotificationServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->app->singleton('vonage', function () {
-            $credentials = new Basic(
-                env('VONAGE_API_KEY'),
-                env('VONAGE_API_SECRET')
-            );
-
+        $this->app->bind('vonage', function () {
+            $credentials = new Basic(env('VONAGE_API_KEY'), env('VONAGE_API_SECRET'));
             return new Client($credentials);
         });
     }
