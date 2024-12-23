@@ -135,11 +135,8 @@ class UserAuthController extends Controller
 
         // تحميل الصورة المتعلقة بالمستخدم
         $user->load('image');
-        $otp = rand(100000, 999999);  // توليد OTP عشوائي
-        $name = $user->name;  // نستخدم name بدلاً من userName
-
-        // إرسال الـ OTP واسم المستخدم:
-        $user->notify(new SuccessfulRegistration($otp, $name));
+        $otp = rand(100000, 999999);
+        $user->notify(new SuccessfulRegistration($otp, $user->name));
 
         return response()->json([
             'message' => 'User registration successful. Please verify your phone number.',
@@ -147,7 +144,7 @@ class UserAuthController extends Controller
             'otp_identifier' => $user->phoNum,
         ], 201);
     }
-    
+
 
 
 
