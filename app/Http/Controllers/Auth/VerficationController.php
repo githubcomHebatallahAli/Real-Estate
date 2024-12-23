@@ -132,10 +132,29 @@ class VerficationController extends Controller
         ]);
     }
 
+    // public function sendSms($to, $message)
+    // {
+    //     $testNumbers = ['+201114990063', '+201030124015']; // قائمة أرقام الاختبار المسجلة
+    //     $message = 'Hello, this is a test message using Vonage!';
+    //     $basic  = new Basic(env('VONAGE_API_KEY'), env('VONAGE_API_SECRET'));
+    //     $client = new Client($basic);
+
+    //     $response = $client->sms()->send(
+    //         new \Vonage\SMS\Message\SMS($to, env('VONAGE_FROM'), $message)
+    //     );
+
+    //     $message = $response->current();
+
+    //     if ($message->getStatus() == 0) {
+    //         return 'Message sent successfully.';
+    //     } else {
+    //         return 'Message failed with status: ' . $message->getStatus();
+    //     }
+    // }
+
     public function sendSms($to, $message)
-    {
-        $testNumbers = ['+201114990063', '+201030124015']; // قائمة أرقام الاختبار المسجلة
-        $message = 'Hello, this is a test message using Vonage!';
+{
+    try {
         $basic  = new Basic(env('VONAGE_API_KEY'), env('VONAGE_API_SECRET'));
         $client = new Client($basic);
 
@@ -143,38 +162,19 @@ class VerficationController extends Controller
             new \Vonage\SMS\Message\SMS($to, env('VONAGE_FROM'), $message)
         );
 
-        $message = $response->current();
+        $messageStatus = $response->current();
 
-        if ($message->getStatus() == 0) {
+        if ($messageStatus->getStatus() == 0) {
+            Log::info("SMS sent successfully to {$to}");
             return 'Message sent successfully.';
         } else {
-            return 'Message failed with status: ' . $message->getStatus();
+            Log::error("Failed to send SMS to {$to}. Status: " . $messageStatus->getStatus());
+            return 'Message failed with status: ' . $messageStatus->getStatus();
         }
+    } catch (\Exception $e) {
+        Log::error("Error sending SMS: " . $e->getMessage());
+        return 'Failed to send SMS. Error: ' . $e->getMessage();
     }
-
-//     public function sendSms($to, $message)
-// {
-//     try {
-//         $basic  = new Basic(env('VONAGE_API_KEY'), env('VONAGE_API_SECRET'));
-//         $client = new Client($basic);
-
-//         $response = $client->sms()->send(
-//             new \Vonage\SMS\Message\SMS($to, env('VONAGE_FROM'), $message)
-//         );
-
-//         $messageStatus = $response->current();
-
-//         if ($messageStatus->getStatus() == 0) {
-//             Log::info("SMS sent successfully to {$to}");
-//             return 'Message sent successfully.';
-//         } else {
-//             Log::error("Failed to send SMS to {$to}. Status: " . $messageStatus->getStatus());
-//             return 'Message failed with status: ' . $messageStatus->getStatus();
-//         }
-//     } catch (\Exception $e) {
-//         Log::error("Error sending SMS: " . $e->getMessage());
-//         return 'Failed to send SMS. Error: ' . $e->getMessage();
-//     }
-// }
+}
 
 }
