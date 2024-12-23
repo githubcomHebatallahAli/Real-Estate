@@ -135,29 +135,19 @@ class UserAuthController extends Controller
 
         // تحميل الصورة المتعلقة بالمستخدم
         $user->load('image');
+        $otp = rand(100000, 999999);  // توليد OTP عشوائي
+        $name = $user->name;  // نستخدم name بدلاً من userName
 
-        // توليد OTP
-        $otp = rand(100000, 999999);
+        // إرسال الـ OTP واسم المستخدم:
+        $user->notify(new SuccessfulRegistration($otp, $name));
 
-        // إرسال OTP عبر الإشعار
-        try {
-            $user->notify(new SuccessfulRegistration($otp));
-
-            // إذا تم إرسال OTP بنجاح
-            return response()->json([
-                'message' => 'User registration successful. Please verify your phone number.',
-                'user' => new UserRegisterResource($user),
-                'otp_identifier' => $user->phoNum, // إرسال رقم الهاتف كمعرف
-            ], 201);
-        } catch (\Exception $e) {
-            // إذا فشل إرسال OTP
-            return response()->json([
-                'message' => 'User registration successful. However, OTP could not be sent. Please try resending it.',
-                'user' => new UserRegisterResource($user),
-                'error' => $e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'message' => 'User registration successful. Please verify your phone number.',
+            'user' => new UserRegisterResource($user),
+            'otp_identifier' => $user->phoNum,
+        ], 201);
     }
+    
 
 
 

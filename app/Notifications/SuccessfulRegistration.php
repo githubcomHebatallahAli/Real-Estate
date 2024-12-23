@@ -34,15 +34,22 @@ class SuccessfulRegistration extends Notification
     }
 
 
+    // public function toVonage($notifiable)
+    // {
+    //     $client = new Client(new Basic(config('services.vonage.vonage_api_key'), config('services.vonage.vonage_api_secret')));
+
+    //     $message = $client->message()->send([
+    //         'to' => $notifiable->phoNum,
+    //         'from' => config('services.vonage.vonage_from'),
+    //         'text' => 'Welcome to My App, ' . $this->name . '! Your OTP is: ' . $this->otp,
+    //     ]);
+    // }
+
     public function toVonage($notifiable)
     {
-        $client = new Client(new Basic(config('services.vonage.vonage_api_key'), config('services.vonage.vonage_api_secret')));
-
-        $message = $client->message()->send([
-            'to' => $notifiable->phoNum,
-            'from' => config('services.vonage.vonage_from'),
-            'text' => 'Welcome to My App, ' . $this->name . '! Your OTP is: ' . $this->otp,
-        ]);
+        return (new VonageMessage)
+            ->from('realEstate')
+            ->content("Welcome, {$this->name}! Your OTP is: {$this->otp}"); // نرسل الاسم في الرسالة
     }
 
 
