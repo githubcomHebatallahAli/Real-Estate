@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Hash;
+use App\Notifications\SuccessfulRegistration;
 use App\Http\Requests\Auth\UserRegisterRequest;
 use App\Http\Resources\Auth\UserRegisterResource;
-use Carbon\Carbon;
+use App\Http\Requests\Auth\VerficationPhoNumRequest;
 
 class UserAuthController extends Controller
 {
@@ -30,6 +32,13 @@ class UserAuthController extends Controller
         }
 
         $user = auth()->guard('api')->user();
+
+        if (!$user->is_verified) {
+            return response()->json([
+                'message' => 'Your account is not verified. Please verify your phone number.'
+            ], 403);
+        }
+
         if ($user->ip !== $request->ip()) {
             $user->ip = $request->ip();
             $user->save();
@@ -43,35 +52,99 @@ class UserAuthController extends Controller
     }
 
 
+    // public function register(UserRegisterRequest $request) {
+    //     $validator = Validator::make($request->all(), $request->rules());
+
+    //     if ($validator->fails()) {
+    //         return response()->json($validator->errors()->toJson(), 400);
+    //     }
+
+    //     $userData = array_merge(
+    //         $validator->validated(),
+    //         ['password' => bcrypt($request->password)],
+    //         ['ip' => $request->ip()],
+    //         ['userType' => $request->userType ?? 'user']
+
+    //     );
+
+    //     $user = User::create($userData);
+
+    //     if ($request->hasFile('image')) {
+
+    //         $path = $request->file('image')->store('user', 'public');
+    //         $user->image()->create(['path' => $path]);
+    //     }
+
+    //     $user->load('image');
+
+
+    //     try {
+    //         $verificationController = new VerficationController();
+
+    //         $request = new VerficationPhoNumRequest(['phoNum' => $user->phoNum]);
+
+    //         $verificationController->sendOtp($request);
+
+    //         return response()->json([
+    //             'message' => 'User registration successful. Please verify your phone number.',
+    //             'user' => new UserRegisterResource($user),
+    //             'otp_identifier' => $user->phoNum,
+    //         ], 201);
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'message' => 'User registration successful. However, OTP could not be sent. Please try resending it.',
+    //             'user' => new UserRegisterResource($user),
+    //             'error' => $e->getMessage(),
+    //         ], 201);
+    //     }
+    //     return response()->json([
+    //         'message' => 'User Registration successful',
+    //         'user' =>new UserRegisterResource($user)
+    //     ]);
+    //     return response()->json([
+    //         'message' => 'User Registration successful',
+    //         'user' => new UserRegisterResource($user)
+    //     ], 201);
+    // }
+
+
     public function register(UserRegisterRequest $request) {
+        // التحقق من صحة البيانات المدخلة
         $validator = Validator::make($request->all(), $request->rules());
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
         }
 
+        // دمج البيانات المدخلة
         $userData = array_merge(
             $validator->validated(),
             ['password' => bcrypt($request->password)],
             ['ip' => $request->ip()],
             ['userType' => $request->userType ?? 'user']
-
         );
 
+        // إنشاء المستخدم في قاعدة البيانات
         $user = User::create($userData);
 
+        // رفع صورة المستخدم إن وجدت
         if ($request->hasFile('image')) {
-
             $path = $request->file('image')->store('user', 'public');
             $user->image()->create(['path' => $path]);
         }
 
+        // تحميل الصورة المتعلقة بالمستخدم
         $user->load('image');
+        $otp = rand(100000, 999999);
+        $user->notify(new SuccessfulRegistration($otp, $user->name));
+
         return response()->json([
-            'message' => 'user Registration successful',
-            'user' => new UserRegisterResource($user)
+            'message' => 'User registration successful. Please verify your phone number.',
+            'user' => new UserRegisterResource($user),
+            'otp_identifier' => $user->phoNum,
         ], 201);
     }
+
 
 
 

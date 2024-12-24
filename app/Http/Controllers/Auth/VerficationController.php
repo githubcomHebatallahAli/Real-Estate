@@ -21,34 +21,67 @@ class VerficationController extends Controller
         $this->otp = new Otp();
     }
 
+    // public function sendOtp(VerficationPhoNumRequest $request)
+    // {
+    //     try {
+    //         $phoNum = strval($request->phoNum);
+
+    //         // التحقق من تنسيق الرقم
+    //         if (!preg_match('/^\+\d{10,15}$/', $phoNum)) {
+    //             throw new \Exception('Invalid phone number format.');
+    //         }
+
+    //         $otp = $this->otp->generate($phoNum, 6, 10); // توليد الرمز
+
+    //         // إرسال الرسالة
+    //         $this->sendSms($phoNum, "Your OTP is: " . $otp->token);
+
+    //         return response()->json([
+    //             'message' => 'OTP sent successfully.',
+    //             'identifier' => $phoNum,
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         Log::error("Failed to send OTP: " . $e->getMessage());
+
+    //         return response()->json([
+    //             'message' => 'Failed to send OTP. Please try again later.',
+    //             'error' => $e->getMessage(),
+    //         ], 500);
+    //     }
+    // }
+
     public function sendOtp(VerficationPhoNumRequest $request)
-    {
-        try {
-            $phoNum = strval($request->phoNum);
+{
+    try {
+        $phoNum = strval($request->phoNum);
 
-            // التحقق من تنسيق الرقم
-            if (!preg_match('/^\+\d{10,15}$/', $phoNum)) {
-                throw new \Exception('Invalid phone number format.');
-            }
-
-            $otp = $this->otp->generate($phoNum, 6, 10); // توليد الرمز
-
-            // إرسال الرسالة
-            $this->sendSms($phoNum, "Your OTP is: " . $otp->token);
-
-            return response()->json([
-                'message' => 'OTP sent successfully.',
-                'identifier' => $phoNum,
-            ]);
-        } catch (\Exception $e) {
-            Log::error("Failed to send OTP: " . $e->getMessage());
-
-            return response()->json([
-                'message' => 'Failed to send OTP. Please try again later.',
-                'error' => $e->getMessage(),
-            ], 500);
+        // التحقق من تنسيق الرقم
+        if (!preg_match('/^\+\d{10,15}$/', $phoNum)) {
+            throw new \Exception('Invalid phone number format.');
         }
+
+        $otp = $this->otp->generate($phoNum, 6, 10); // توليد الرمز
+
+        // رسالة OTP
+        $otpMessage = "Your OTP is: " . $otp->token;
+
+        // إرسال الرسالة
+        $this->sendSms($phoNum, $otpMessage);
+
+        return response()->json([
+            'message' => 'OTP sent successfully.',
+            'identifier' => $phoNum,
+        ]);
+    } catch (\Exception $e) {
+        Log::error("Failed to send OTP: " . $e->getMessage());
+
+        return response()->json([
+            'message' => 'Failed to send OTP. Please try again later.',
+            'error' => $e->getMessage(),
+        ], 500);
     }
+}
+
 
 
 
@@ -64,7 +97,7 @@ class VerficationController extends Controller
         $otp = $this->otp->generate($request->phoNum, 6, 10);
         Log::info("Generated OTP: ", ['otp' => $otp]); // كود من 6 أرقام صالح لمدة 10 دقائق
 
-        // إرسال كود OTP عن طريق Twilio
+       
         try {
             $this->sendSms($request->phoNum, "Your OTP is: " . $otp->token);
 
@@ -99,23 +132,49 @@ class VerficationController extends Controller
         ]);
     }
 
+    // public function sendSms($to, $message)
+    // {
+    //     $testNumbers = ['+201114990063', '+201030124015']; // قائمة أرقام الاختبار المسجلة
+    //     $message = 'Hello, this is a test message using Vonage!';
+    //     $basic  = new Basic(env('VONAGE_API_KEY'), env('VONAGE_API_SECRET'));
+    //     $client = new Client($basic);
+
+    //     $response = $client->sms()->send(
+    //         new \Vonage\SMS\Message\SMS($to, env('VONAGE_FROM'), $message)
+    //     );
+
+    //     $message = $response->current();
+
+    //     if ($message->getStatus() == 0) {
+    //         return 'Message sent successfully.';
+    //     } else {
+    //         return 'Message failed with status: ' . $message->getStatus();
+    //     }
+    // }
+
     public function sendSms($to, $message)
-    {
-        $testNumbers = ['+201114990063', '+201030124015']; // قائمة أرقام الاختبار المسجلة
-        $message = 'Hello, this is a test message using Vonage!';
+{
+    try {
         $basic  = new Basic(env('VONAGE_API_KEY'), env('VONAGE_API_SECRET'));
         $client = new Client($basic);
 
         $response = $client->sms()->send(
-            new \Vonage\SMS\Message\SMS($to, env('VONAGE_SMS_FROM'), $message)
+            new \Vonage\SMS\Message\SMS($to, env('VONAGE_FROM'), $message)
         );
 
-        $message = $response->current();
+        $messageStatus = $response->current();
 
-        if ($message->getStatus() == 0) {
+        if ($messageStatus->getStatus() == 0) {
+            Log::info("SMS sent successfully to {$to}");
             return 'Message sent successfully.';
         } else {
-            return 'Message failed with status: ' . $message->getStatus();
+            Log::error("Failed to send SMS to {$to}. Status: " . $messageStatus->getStatus());
+            return 'Message failed with status: ' . $messageStatus->getStatus();
         }
+    } catch (\Exception $e) {
+        Log::error("Error sending SMS: " . $e->getMessage());
+        return 'Failed to send SMS. Error: ' . $e->getMessage();
     }
+}
+
 }

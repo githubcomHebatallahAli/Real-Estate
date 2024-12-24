@@ -34,6 +34,11 @@ class User extends Authenticatable implements JWTSubject
         'otp_sent_at',
     ];
 
+
+    public function routeNotificationForVonage($notification)
+    {
+        return $this->phoNum;
+    }
     public function image()
     {
         return $this->morphOne(Image::class, 'imageable');
@@ -44,6 +49,9 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array<int, string>
      */
+
+
+
     protected $hidden = [
         'password',
         'remember_token',

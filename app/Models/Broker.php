@@ -39,7 +39,6 @@ class Broker extends Authenticatable  implements JWTSubject
         return $this->hasMany(Rating::class);
     }
 
-
     protected $hidden = [
         'password',
         'remember_token',

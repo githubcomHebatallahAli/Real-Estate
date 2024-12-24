@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Carbon\Carbon;
 use App\Models\Broker;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -9,7 +10,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\Auth\BrokerRegisterRequest;
 use App\Http\Resources\Auth\BrokerRegisterResource;
-use Carbon\Carbon;
+use App\Http\Requests\Auth\VerficationPhoNumRequest;
 
 class BrokerAuthController extends Controller
 {
@@ -28,7 +29,15 @@ class BrokerAuthController extends Controller
             ], 422);
 
         }
+
         $broker = auth()->guard('broker')->user();
+
+        if (!$broker->is_verified) {
+            return response()->json([
+                'message' => 'Your account is not verified. Please verify your phone number.'
+            ], 403);
+        }
+        
         if ($broker->ip !== $request->ip()) {
             $broker->ip = $request->ip();
             $broker->save();
@@ -74,7 +83,25 @@ class BrokerAuthController extends Controller
 
         // $broker->save();
         // $broker->notify(new EmailVerificationNotification());
+        try {
+            $verificationController = new VerficationController();
 
+            $request = new VerficationPhoNumRequest(['phoNum' => $broker->phoNum]);
+
+            $verificationController->sendOtp($request);
+
+            return response()->json([
+                'message' => 'Broker registration successful. Please verify your phone number.',
+                'broker' => new BrokerRegisterResource($broker),
+                'otp_identifier' => $broker->phoNum,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Broker registration successful. However, OTP could not be sent. Please try resending it.',
+                'broker' => new BrokerRegisterResource($broker),
+                'error' => $e->getMessage(),
+            ], 201);
+        }
         return response()->json([
             'message' => 'Broker Registration successful',
             'broker' =>new BrokerRegisterResource($broker)

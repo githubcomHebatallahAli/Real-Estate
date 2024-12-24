@@ -59,7 +59,6 @@ return [
             'hash' => false,
         ],
 
-
         'broker' => [
             'driver' => 'jwt',
             'provider' => 'brokers',
@@ -100,7 +99,6 @@ return [
             'model' => App\Models\Admin::class,
         ],
 
-
         'brokers' => [
             'driver' => 'eloquent',
             'model' => App\Models\Broker::class,
@@ -140,7 +138,6 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
-
 
         'brokers' => [
             'provider' => 'brokers',

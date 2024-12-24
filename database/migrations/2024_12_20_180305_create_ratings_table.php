@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('broker_id')->constrained('brokers')->cascadeOnDelete();
             $table->integer('rating')->checkBetween(1,5);
             $table->text('comment')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
