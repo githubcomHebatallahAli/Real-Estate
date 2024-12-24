@@ -22,6 +22,8 @@ class Broker extends Authenticatable  implements JWTSubject
         'targetPlace',
         'userType',
         'commission',
+        'brief',
+        'realEstateType',
         'last_login_at',
         'last_logout_at',
         'session_duration',

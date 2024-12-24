@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Resources\Auth;
+namespace App\Http\Resources\Broker;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\ImageResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class BrokerRegisterResource extends JsonResource
+class BrokerRatingResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,17 +18,16 @@ class BrokerRegisterResource extends JsonResource
         return [
             'id'=>$this->id,
             'name'=>$this->name,
-            'email'=>$this->email,
-            'phoNum' => $this -> phoNum ,
+            // 'phoNum' => $this -> phoNum ,
             'governorate' => $this -> governorate,
-            'address' => $this -> address,
             'targetPlace' => $this -> targetPlace,
             'userType' => $this -> userType,
             'commission' => $this -> commission,
             'brief' => $this -> brief,
             'realEstateType' => $this -> realEstateType,
             'image' => new ImageResource($this->whenLoaded('image')),
-        ];
+            
 
+        ];
     }
 }

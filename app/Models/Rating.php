@@ -13,7 +13,9 @@ class Rating extends Model
         'user_id',
         'broker_id',
         'rating',
-        'comment'
+        'comment',
+        'transactionNum',
+        'completeRate',
     ];
 
     public function broker()
