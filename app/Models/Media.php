@@ -3,19 +3,21 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Image extends Model
+class Media extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'path',
-        'imageable_type',
-        'imageable_id'
+        'mediaable_type',
+        'mediaable_id',
+        'type'
         ];
 
-    public function imageable()
+    public function mediaable()
     {
         return $this->morphTo();
     }

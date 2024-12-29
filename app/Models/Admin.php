@@ -33,9 +33,9 @@ class Admin extends Authenticatable  implements JWTSubject
         return $this->belongsTo(Role::class);
     }
 
-    public function image()
+    public function media()
     {
-        return $this->morphOne(Image::class, 'imageable');
+        return $this->morphOne(Media::class, 'mediaable');
     }
 
     protected $hidden = [

@@ -14,13 +14,13 @@ return new class extends Migration
         Schema::create('brokers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('email')->unique()->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('governorate');
             $table->string('address');
-            $table->string('phoNum');
-            $table->string('userType')->nullable()->default('broker');
+            $table->string('phoNum')->unique();
+            $table->foreignId('usertype_id')->constrained('usertypes')->cascadeOnDelete();
             $table->string('commission');
             $table->text('brief')->nullable();
             $table->boolean('is_verified')->default(false);

@@ -31,14 +31,19 @@ class Broker extends Authenticatable  implements JWTSubject
         'otp_sent_at',
     ];
 
-    public function image()
+    public function media()
     {
-        return $this->morphOne(Image::class, 'imageable');
+        return $this->morphOne(Media::class, 'mediaable');
     }
 
     public function ratings()
     {
         return $this->hasMany(Rating::class);
+    }
+
+    public function userType()
+    {
+        return $this->belongsTo(userType::class);
     }
 
     protected $hidden = [

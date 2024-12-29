@@ -39,9 +39,15 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->phoNum;
     }
-    public function image()
+
+    public function media()
     {
-        return $this->morphOne(Image::class, 'imageable');
+        return $this->morphOne(Media::class, 'mediaable');
+    }
+
+    public function userType()
+    {
+        return $this->belongsTo(userType::class);
     }
 
     /**
