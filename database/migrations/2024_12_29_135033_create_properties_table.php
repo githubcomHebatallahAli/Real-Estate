@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('properties', function (Blueprint $table) {
             $table->id();
+            $table->string('type');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
