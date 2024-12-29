@@ -22,6 +22,8 @@ class Broker extends Authenticatable  implements JWTSubject
         'targetPlace',
         'userType',
         'commission',
+        'brief',
+        'realEstateType',
         'last_login_at',
         'last_logout_at',
         'session_duration',
@@ -29,14 +31,19 @@ class Broker extends Authenticatable  implements JWTSubject
         'otp_sent_at',
     ];
 
-    public function image()
+    public function media()
     {
-        return $this->morphOne(Image::class, 'imageable');
+        return $this->morphOne(Media::class, 'mediaable');
     }
 
     public function ratings()
     {
         return $this->hasMany(Rating::class);
+    }
+
+    public function userType()
+    {
+        return $this->belongsTo(userType::class);
     }
 
     protected $hidden = [

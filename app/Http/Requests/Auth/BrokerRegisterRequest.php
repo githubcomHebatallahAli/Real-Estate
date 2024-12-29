@@ -32,6 +32,11 @@ class BrokerRegisterRequest extends FormRequest
             'address' =>'required|string',
             'targetPlace' =>'required|string',
             'commission'  =>'required|string',
+            'brief'  =>'required|string',
+            'realEstateType' =>'required|string',
+            'password' => 'required|string|confirmed|min:6',
+            'password' => 'required|string|confirmed|min:6',
+            'usertype_id'  => 'required|exists:usertypes,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }

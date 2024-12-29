@@ -15,8 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('broker_id')->constrained('brokers')->cascadeOnDelete();
-            $table->integer('rating')->checkBetween(1,5);
+            $table->integer('rating')->checkBetween(1,5)->nullable();
             $table->text('comment')->nullable();
+            $table->integer('transactionNum')->nullable();
+            $table->integer('completeRate')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

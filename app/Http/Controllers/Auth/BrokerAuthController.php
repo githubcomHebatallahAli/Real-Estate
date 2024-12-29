@@ -37,7 +37,7 @@ class BrokerAuthController extends Controller
                 'message' => 'Your account is not verified. Please verify your phone number.'
             ], 403);
         }
-        
+
         if ($broker->ip !== $request->ip()) {
             $broker->ip = $request->ip();
             $broker->save();
@@ -68,18 +68,18 @@ class BrokerAuthController extends Controller
             $validator->validated(),
             ['password' => bcrypt($request->password)],
             ['ip' => $request->ip()],
-            ['userType' => $request->userType ?? 'broker']
+            // ['userType' => $request->userType ?? 'broker']
         );
 
         $broker = Broker::create($brokerData);
 
-        if ($request->hasFile('image')) {
+        if ($request->hasFile('media')) {
 
-            $path = $request->file('image')->store('broker', 'public');
-            $broker->image()->create(['path' => $path]);
+            $path = $request->file('media')->store('broker', 'public');
+            $broker->media()->create(['path' => $path]);
         }
 
-        $broker->load('image');
+        $broker->load('media');
 
         // $broker->save();
         // $broker->notify(new EmailVerificationNotification());

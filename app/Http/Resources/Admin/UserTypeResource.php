@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ImageResource extends JsonResource
+class UserTypeResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,10 +15,8 @@ class ImageResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'path' => $this->path,
-            'imageable_type' => $this->imageable_type,
-            'imageable_id' => $this->imageable_id,
+            "id" => $this -> id,
+            'userType' => $this -> userType
         ];
     }
 }

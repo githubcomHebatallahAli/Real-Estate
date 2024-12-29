@@ -109,32 +109,29 @@ class UserAuthController extends Controller
 
 
     public function register(UserRegisterRequest $request) {
-        // التحقق من صحة البيانات المدخلة
+
         $validator = Validator::make($request->all(), $request->rules());
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        // دمج البيانات المدخلة
+
         $userData = array_merge(
             $validator->validated(),
             ['password' => bcrypt($request->password)],
             ['ip' => $request->ip()],
-            ['userType' => $request->userType ?? 'user']
+            // ['userType' => $request->userType ?? 'user']
         );
 
-        // إنشاء المستخدم في قاعدة البيانات
         $user = User::create($userData);
 
-        // رفع صورة المستخدم إن وجدت
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('user', 'public');
-            $user->image()->create(['path' => $path]);
+        if ($request->hasFile('media')) {
+            $path = $request->file('media')->store('user', 'public');
+            $user->media()->create(['path' => $path]);
         }
 
-        // تحميل الصورة المتعلقة بالمستخدم
-        $user->load('image');
+        $user->load('media');
         $otp = rand(100000, 999999);
         $user->notify(new SuccessfulRegistration($otp, $user->name));
 

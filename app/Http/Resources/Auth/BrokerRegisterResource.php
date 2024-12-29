@@ -3,7 +3,10 @@
 namespace App\Http\Resources\Auth;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\MainResource;
 use App\Http\Resources\ImageResource;
+use App\Http\Resources\MediaResource;
+use App\Http\Resources\Admin\UserTypeResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class BrokerRegisterResource extends JsonResource
@@ -23,9 +26,11 @@ class BrokerRegisterResource extends JsonResource
             'governorate' => $this -> governorate,
             'address' => $this -> address,
             'targetPlace' => $this -> targetPlace,
-            'userType' => $this -> userType,
+            'userType' => new UserTypeResource($this->userType),
             'commission' => $this -> commission,
-            'image' => new ImageResource($this->whenLoaded('image')),
+            'brief' => $this -> brief,
+            'realEstateType' => $this -> realEstateType,
+            'media' => new MediaResource($this->whenLoaded('media')),
         ];
 
     }

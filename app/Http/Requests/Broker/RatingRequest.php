@@ -24,8 +24,11 @@ class RatingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'rating'=>'required|integer|min:1|max:5',
-            'comment'=>'nullable|string'
+            'rating'=>'nullable|integer|min:1|max:5',
+            'comment'=>'nullable|string',
+            'transactionNum'=>'nullable|integer',
+            'completeRate'=>'nullable|integer',
+
         ];
     }
 
