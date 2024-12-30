@@ -41,10 +41,10 @@ class Broker extends Authenticatable  implements JWTSubject
         return $this->hasMany(Rating::class);
     }
 
-    public function userType()
-    {
-        return $this->belongsTo(userType::class);
-    }
+    // public function userType()
+    // {
+    //     return $this->belongsTo(userType::class);
+    // }
 
     protected $hidden = [
         'password',

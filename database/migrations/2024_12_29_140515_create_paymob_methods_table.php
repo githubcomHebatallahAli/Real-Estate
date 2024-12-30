@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::create('paymob_methods', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('broker_id')->constrained('brokers')->nullable()->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained('users')->nullable()->cascadeOnDelete();
-            $table->text('message')->nullable();
-            $table->decimal('price')->nullable();
+            $table->string('payment_method');
+            $table->text('api_key');
+            $table->string('integration_id');
+            $table->string('currency')->default('EGP');
+            $table->enum('status', ['active', 'notActive'])->default('active')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('orders');
+        Schema::dropIfExists('paymob_methods');
     }
 };

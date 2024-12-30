@@ -20,9 +20,9 @@ return new class extends Migration
             $table->string('governorate');
             $table->string('address');
             $table->string('phoNum')->unique();
-            $table->foreignId('usertype_id')->constrained('usertypes')->cascadeOnDelete();
             $table->string('commission');
             $table->text('brief')->nullable();
+            $table->string('userType')->default('broker')->nullable();
             $table->boolean('is_verified')->default(false);
             $table->timestamp('otp_sent_at')->nullable();
             $table->string('targetPlace');

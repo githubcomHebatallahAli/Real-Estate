@@ -30,7 +30,7 @@ class UserRegisterRequest extends FormRequest
             'phoNum' => 'required|string|unique:users',
             'governorate' =>'required|string',
             'address' => 'required|string',
-            'usertype_id'  => 'required|exists:usertypes,id',
+            // 'usertype_id'  => 'required|exists:usertypes,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }

@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('reactions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('message_id')->constrained('messages')->cascadeOnDelete();
+            $table->morphs('reactable');
+            $table->enum('type', ['heart', 'thumb', 'angry', 'laugh', 'sad', 'wow'])->default('thumb')->nullable();
             $table->timestamps();
         });
     }

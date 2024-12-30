@@ -45,10 +45,10 @@ class User extends Authenticatable implements JWTSubject
         return $this->morphOne(Media::class, 'mediaable');
     }
 
-    public function userType()
-    {
-        return $this->belongsTo(userType::class);
-    }
+    // public function userType()
+    // {
+    //     return $this->belongsTo(userType::class);
+    // }
 
     /**
      * The attributes that should be hidden for serialization.

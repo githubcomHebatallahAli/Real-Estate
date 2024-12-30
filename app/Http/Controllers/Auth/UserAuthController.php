@@ -121,7 +121,7 @@ class UserAuthController extends Controller
             $validator->validated(),
             ['password' => bcrypt($request->password)],
             ['ip' => $request->ip()],
-            // ['userType' => $request->userType ?? 'user']
+            ['userType' => $request->userType ?? 'user']
         );
 
         $user = User::create($userData);

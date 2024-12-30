@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('package_brokers', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('broker_id')->constrained('brokers')->cascadeOnDelete();
+            $table->foreignId('package_id')->constrained('packages')->cascadeOnDelete();
+            $table->date('startDate')->nullable();
+            $table->date('endDate')->nullable();
+            $table->integer('advUseNum')->nullable();
             $table->timestamps();
         });
     }
