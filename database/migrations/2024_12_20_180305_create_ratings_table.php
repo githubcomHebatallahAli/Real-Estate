@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('comment')->nullable();
             $table->integer('transactionNum')->nullable();
             $table->integer('completeRate')->nullable();
+            $table->timestamp('creationDate')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

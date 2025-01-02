@@ -4,6 +4,7 @@ namespace App\Http\Resources\Broker;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\ImageResource;
+use App\Http\Resources\MediaResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class BrokerRatingResource extends JsonResource
@@ -25,8 +26,8 @@ class BrokerRatingResource extends JsonResource
             'commission' => $this -> commission,
             'brief' => $this -> brief,
             'realEstateType' => $this -> realEstateType,
-            'image' => new ImageResource($this->whenLoaded('image')),
-            
+            'media' => new MediaResource($this->whenLoaded('media')),
+
 
         ];
     }

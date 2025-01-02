@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('media', function (Blueprint $table) {
             $table->id();
             $table->string('path')->nullable();
-            $table->string('type')->nullable();
+            // $table->string('type')->nullable();
             $table->enum('type', ['image', 'video', 'audio'])->nullable();
             $table->string('mediaable_type');
             $table->unsignedBigInteger('mediaable_id');

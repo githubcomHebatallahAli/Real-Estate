@@ -33,9 +33,13 @@ return new class extends Migration
             $table->integer('roomNum');
             $table->integer('area');
             $table->string('ownerType');
+            $table->integer('totalPrice')->nullable();
+            $table->integer('installmentPrice')->nullable();
+            $table->integer('downPrice')->nullable();
+            $table->integer('rentPrice')->nullable();
             $table->timestamp('creationDate')->nullable();
             $table->text('description')->nullable();
-            $table->enum('status', ['active', 'notActive'])->default('active')->nullable();
+            $table->enum('status', ['active', 'notActive'])->default('notActive')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

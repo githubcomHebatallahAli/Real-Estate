@@ -16,6 +16,7 @@ class Rating extends Model
         'comment',
         'transactionNum',
         'completeRate',
+        'creationDate'
     ];
 
     public function broker()

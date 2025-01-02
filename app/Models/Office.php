@@ -10,8 +10,31 @@ class Office extends Model
 {
     use HasFactory, SoftDeletes;
     protected $fillable = [
-
+        'broker_id',
+        'user_id',
+        'installment_id',
+        'finishe_id',
+        'transaction_id',
+        'property_id',
+        'water_id',
+        'electricty_id',
+        'sale_id',
+        'governorate',
+        'city',
+        'district',
+        'street',
+        'locationGPS',
+        'propertyNum',
+        'floorNum',
+        'flatNum',
+        'roomNum',
+        'area',
+        'ownerType',
+        'creationDate',
+        'description',
+        'status',
     ];
+    
     public function media()
     {
         return $this->morphOne(Media::class, 'mediaable');

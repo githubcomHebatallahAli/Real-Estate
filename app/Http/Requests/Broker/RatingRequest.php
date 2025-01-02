@@ -24,6 +24,9 @@ class RatingRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'creationDate'=> 'nullable|date_format:Y-m-d H:i:s',
+            'broker_id' => 'required|exists:brokers,id',
+            'user_id' => 'required|exists:users,id',
             'rating'=>'nullable|integer|min:1|max:5',
             'comment'=>'nullable|string',
             'transactionNum'=>'nullable|integer',

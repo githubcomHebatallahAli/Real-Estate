@@ -10,8 +10,32 @@ class Flat extends Model
 {
     use HasFactory, SoftDeletes;
     protected $fillable = [
-
+        'broker_id',
+        'user_id',
+        'installment_id',
+        'finishe_id',
+        'transaction_id',
+        'property_id',
+        'water_id',
+        'electricty_id',
+        'sale_id',
+        'governorate',
+        'city',
+        'district',
+        'street',
+        'locationGPS',
+        'propertyNum',
+        'floorNum',
+        'flatNum',
+        'roomNum',
+        'pathRoomNum',
+        'description',
+        'area',
+        'ownerType',
+        'creationDate',
+        'status',
     ];
+    
     public function media()
     {
         return $this->morphOne(Media::class, 'mediaable');

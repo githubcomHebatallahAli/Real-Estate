@@ -10,6 +10,32 @@ class Villa extends Model
 {
     use HasFactory, SoftDeletes;
     protected $fillable = [
+        'broker_id',
+        'user_id',
+        'installment_id',
+        'finishe_id',
+        'transaction_id',
+        'property_id',
+        'water_id',
+        'electricty_id',
+        'sale_id',
+        'governorate',
+        'city',
+        'district',
+        'street',
+        'locationGPS',
+        'propertyNum',
+        'floorNum',
+        'reciptionNum',
+        'roomNum',
+        'bedRoomNum',
+        'kitchenNum',
+        'pathRoomNum',
+        'description',
+        'area',
+        'gardenArea',
+        'ownerType',
+        'creationDate',
         'status',
     ];
 
@@ -53,7 +79,7 @@ class Villa extends Model
     {
         return $this->belongsTo(Finishe::class);
     }
-    
+
     public function broker()
     {
         return $this->belongsTo(Broker::class);
