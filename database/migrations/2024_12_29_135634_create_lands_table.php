@@ -20,7 +20,6 @@ return new class extends Migration
             $table->foreignId('property_id')->constrained('properties')->cascadeOnDelete();
             $table->foreignId('water_id')->constrained('waters')->cascadeOnDelete();
             $table->foreignId('electricty_id')->constrained('electricities')->cascadeOnDelete();
-            $table->foreignId('sale_id')->constrained('sales')->cascadeOnDelete();
             $table->string('governorate');
             $table->string('city');
             $table->string('district');
@@ -38,6 +37,7 @@ return new class extends Migration
             $table->integer('rentPrice')->nullable();
             $table->timestamp('creationDate')->nullable();
             $table->enum('status', ['active', 'notActive'])->default('notActive')->nullable();
+            $table->enum('sale', ['sold', 'notSold'])->default('notSold')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
