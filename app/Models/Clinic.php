@@ -18,21 +18,27 @@ class Clinic extends Model
         'property_id',
         'water_id',
         'electricty_id',
-        'sale_id',
+        'sale',
         'governorate',
         'city',
         'district',
         'street',
         'locationGPS',
+        'facade',
         'propertyNum',
         'area',
         'floorNum',
         'flatNum',
         'roomNum',
+        'pathRoomNum',
         'ownerType',
         'creationDate',
         'description',
         'status',
+        'totalPrice',
+        'installmentPrice',
+        'downPrice',
+        'rentPrice'
 
     ];
 
@@ -56,10 +62,10 @@ class Clinic extends Model
         return $this->belongsTo(Transaction::class);
     }
 
-    public function sale()
-    {
-        return $this->belongsTo(Sale::class);
-    }
+    // public function sale()
+    // {
+    //     return $this->belongsTo(Sale::class);
+    // }
 
     public function property()
     {

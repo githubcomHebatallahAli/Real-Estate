@@ -18,23 +18,29 @@ class Office extends Model
         'property_id',
         'water_id',
         'electricty_id',
-        'sale_id',
+        'sale',
         'governorate',
         'city',
         'district',
         'street',
         'locationGPS',
+        'facade',
         'propertyNum',
         'floorNum',
         'flatNum',
         'roomNum',
+        'pathRoomNum',
         'area',
         'ownerType',
         'creationDate',
         'description',
         'status',
+        'totalPrice',
+        'installmentPrice',
+        'downPrice',
+        'rentPrice'
     ];
-    
+
     public function media()
     {
         return $this->morphOne(Media::class, 'mediaable');
@@ -55,10 +61,10 @@ class Office extends Model
         return $this->belongsTo(Transaction::class);
     }
 
-    public function sale()
-    {
-        return $this->belongsTo(Sale::class);
-    }
+    // public function sale()
+    // {
+    //     return $this->belongsTo(Sale::class);
+    // }
 
     public function property()
     {

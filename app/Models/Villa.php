@@ -18,12 +18,13 @@ class Villa extends Model
         'property_id',
         'water_id',
         'electricty_id',
-        'sale_id',
+        'sale',
         'governorate',
         'city',
         'district',
         'street',
         'locationGPS',
+        'facade',
         'propertyNum',
         'floorNum',
         'reciptionNum',
@@ -37,6 +38,10 @@ class Villa extends Model
         'ownerType',
         'creationDate',
         'status',
+        'totalPrice',
+        'installmentPrice',
+        'downPrice',
+        'rentPrice'
     ];
 
 
@@ -60,10 +65,10 @@ class Villa extends Model
         return $this->belongsTo(Transaction::class);
     }
 
-    public function sale()
-    {
-        return $this->belongsTo(Sale::class);
-    }
+    // public function sale()
+    // {
+    //     return $this->belongsTo(Sale::class);
+    // }
 
     public function property()
     {

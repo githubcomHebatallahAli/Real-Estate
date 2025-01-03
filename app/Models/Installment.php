@@ -10,7 +10,7 @@ class Installment extends Model
 {
     use HasFactory, SoftDeletes;
     protected $fillable = [
-        'type',
+        'status',
     ];
 
     public function flats()

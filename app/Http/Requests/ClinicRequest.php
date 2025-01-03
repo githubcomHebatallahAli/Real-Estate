@@ -24,7 +24,34 @@ class ClinicRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'creationDate'=> 'nullable|date_format:Y-m-d H:i:s',
+            'broker_id' => 'nullable|exists:brokers,id',
+            'user_id' => 'nullable|exists:users,id',
+            'installment_id' => 'required|exists:installments,id',
+            'finishe_id' => 'required|exists:finishes,id',
+            'transaction_id' => 'required|exists:transactions,id',
+            'property_id' => 'nullable|exists:properties,id',
+            'water_id' => 'required|exists:waters,id',
+            'electricty_id' => 'required|exists:electricities,id',
+            'governorate' => 'required|string',
+            'city' => 'required|string',
+            'district' => 'required|string',
+            'street' => 'required|string',
+            'locationGPS' => 'nullable|string',
+            'facade'=> 'nullable|string',
+            'propertyNum' => 'nullable|integer',
+            'floorNum'  => 'required|integer',
+            'roomNum' =>'required|integer',
+            'pathRoomNum' =>'required|integer',
+            'description' =>'nullable|string',
+            'area' =>'required|integer',
+            'ownerType' =>'required|string',
+            'status'  =>'nullable|in:active,notActive',
+            'sale' => 'nullable|in:sold,notSold',
+            'totalPrice' =>'nullable|integer',
+            'installmentPrice' =>'nullable|integer',
+            'downPrice' =>'nullable|integer',
+            'rentPrice' =>'nullable|integer',
         ];
     }
 

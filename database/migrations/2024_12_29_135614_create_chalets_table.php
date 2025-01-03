@@ -25,7 +25,8 @@ return new class extends Migration
             $table->string('city');
             $table->string('district');
             $table->string('street');
-            $table->string('locationGPS');
+            $table->string('locationGPS')->nullable();
+            $table->string('facade')->nullable();
             $table->integer('propertyNum')->nullable();
             $table->string('floorNum')->nullable();
             $table->integer('roomNum');

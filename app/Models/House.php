@@ -18,12 +18,13 @@ class House extends Model
         'property_id',
         'water_id',
         'electricty_id',
-        'sale_id',
+        'sale',
         'governorate',
         'city',
         'district',
         'street',
         'locationGPS',
+        'facade',
         'propertyNum',
         'floorNum',
         'floorFlatNum',
@@ -33,8 +34,12 @@ class House extends Model
         'ownerType',
         'creationDate',
         'status',
+        'totalPrice',
+        'installmentPrice',
+        'downPrice',
+        'rentPrice'
     ];
-    
+
     public function media()
     {
         return $this->morphOne(Media::class, 'mediaable');
@@ -55,10 +60,10 @@ class House extends Model
         return $this->belongsTo(Transaction::class);
     }
 
-    public function sale()
-    {
-        return $this->belongsTo(Sale::class);
-    }
+    // public function sale()
+    // {
+    //     return $this->belongsTo(Sale::class);
+    // }
 
     public function property()
     {
