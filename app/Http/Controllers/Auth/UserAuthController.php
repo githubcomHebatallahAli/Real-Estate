@@ -33,11 +33,11 @@ class UserAuthController extends Controller
 
         $user = auth()->guard('api')->user();
 
-        if (!$user->is_verified) {
-            return response()->json([
-                'message' => 'Your account is not verified. Please verify your phone number.'
-            ], 403);
-        }
+        // if (!$user->is_verified) {
+        //     return response()->json([
+        //         'message' => 'Your account is not verified. Please verify your phone number.'
+        //     ], 403);
+        // }
 
         if ($user->ip !== $request->ip()) {
             $user->ip = $request->ip();

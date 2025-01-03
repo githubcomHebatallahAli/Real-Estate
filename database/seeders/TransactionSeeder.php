@@ -14,11 +14,11 @@ class TransactionSeeder extends Seeder
     public function run(): void
     {
         DB::table('transactions')->insert([
-            'type' => 'ownerShip',
+            'status' => 'ownerShip',
         ]);
 
         DB::table('transactions')->insert([
-            'type' => 'Rent',
+            'status' => 'Rent',
         ]);
     }
 }

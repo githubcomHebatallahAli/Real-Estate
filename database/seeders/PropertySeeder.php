@@ -14,35 +14,35 @@ class PropertySeeder extends Seeder
     public function run(): void
     {
         DB::table('properties')->insert([
-            'type' => 'Flat',
+            'status' => 'Flat',
         ]);
 
         DB::table('properties')->insert([
-            'type' => 'Land',
+            'status' => 'Land',
         ]);
 
         DB::table('properties')->insert([
-            'type' => 'House',
+            'status' => 'House',
         ]);
 
         DB::table('properties')->insert([
-            'type' => 'Villa',
+            'status' => 'Villa',
         ]);
 
         DB::table('properties')->insert([
-            'type' => 'Chalet',
+            'status' => 'Chalet',
         ]);
 
         DB::table('properties')->insert([
-            'type' => 'Shop',
+            'status' => 'Shop',
         ]);
 
         DB::table('properties')->insert([
-            'type' => 'Clinic',
+            'status' => 'Clinic',
         ]);
 
         DB::table('properties')->insert([
-            'type' => 'Office',
+            'status' => 'Office',
         ]);
     }
 }

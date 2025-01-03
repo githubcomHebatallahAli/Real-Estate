@@ -14,15 +14,15 @@ class InstallmentSeeder extends Seeder
     public function run(): void
     {
         DB::table('installments')->insert([
-            'type' => 'Cash',
+            'status' => 'Cash',
         ]);
 
         DB::table('installments')->insert([
-            'type' => 'Installment',
+            'status' => 'Installment',
         ]);
 
         DB::table('installments')->insert([
-            'type' => 'Monthly',
+            'status' => 'Monthly',
         ]);
 
 

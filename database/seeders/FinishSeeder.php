@@ -14,15 +14,15 @@ class FinishSeeder extends Seeder
     public function run(): void
     {
         DB::table('finishes')->insert([
-            'type' => 'Finished',
+            'status' => 'Finished',
         ]);
 
         DB::table('finishes')->insert([
-            'type' => 'semiFinished',
+            'status' => 'semiFinished',
         ]);
 
         DB::table('finishes')->insert([
-            'type' => 'notFinished',
+            'status' => 'notFinished',
         ]);
 
 

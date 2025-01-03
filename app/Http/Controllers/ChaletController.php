@@ -49,35 +49,38 @@ class ChaletController extends Controller
                 "ownerType" => $request-> ownerType,
                 'creationDate' => now()->timezone('Africa/Cairo')
                 ->format('Y-m-d h:i:s'),
-                "status" => $request-> status,
-                "facade" => $request-> facade,
+                // "status" => $request-> status,
+                // "facade" => $request-> facade,
                 "totalPrice" => $request-> totalPrice,
                 "installmentPrice" => $request-> installmentPrice,
                 "downPrice" => $request-> downPrice,
                 "rentPrice" => $request-> rentPrice
             ]);
             if ($request->hasFile('media')) {
-                $file = $request->file('media');
-                $path = $file->store('Chalet', 'public');
+                $files = $request->file('media');
 
-                $type = $file->getMimeType();
-                if (str_contains($type, 'image')) {
-                    $mediaType = 'image';
-                } elseif (str_contains($type, 'video')) {
-                    $mediaType = 'video';
-                } elseif (str_contains($type, 'audio')) {
-                    $mediaType = 'audio';
-                } else {
-                    $mediaType = null;
+                foreach ($files as $file) {
+                    $path = $file->store('Chalet', 'public');
+
+                    $type = $file->getMimeType();
+                    if (str_contains($type, 'image')) {
+                        $mediaType = 'image';
+                    } elseif (str_contains($type, 'video')) {
+                        $mediaType = 'video';
+                    } elseif (str_contains($type, 'audio')) {
+                        $mediaType = 'audio';
+                    } else {
+                        $mediaType = null;
+                    }
+
+                    $Chalet->media()->create([
+                        'path' => $path,
+                        'type' => $mediaType
+                    ]);
                 }
-
-                $Chalet->media()->create([
-                    'path' => $path,
-                    'type' => $mediaType
-                ]);
             }
 
-            $Chalet->load('media');
+            $Chalet->load('media'); // تحميل العلاقة media مع Chalet
            $Chalet->save();
            return response()->json([
             'data' =>new ChaletResource($Chalet),
