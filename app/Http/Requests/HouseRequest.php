@@ -41,7 +41,7 @@ class HouseRequest extends FormRequest
             'facade'=> 'nullable|string',
             'propertyNum' => 'nullable|integer',
             'floorFlatNum' => 'nullable|integer',
-            'floorNum'  => 'required|integer',
+            'floorNum'  => 'required|string',
             'description' =>'nullable|string',
             'area' =>'required|integer',
             'gardenArea' =>'nullable|integer',

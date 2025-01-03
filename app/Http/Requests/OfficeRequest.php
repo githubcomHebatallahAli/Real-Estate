@@ -40,7 +40,7 @@ class OfficeRequest extends FormRequest
             'locationGPS' => 'nullable|string',
             'facade'=> 'nullable|string',
             'propertyNum' => 'nullable|integer',
-            'floorNum'  => 'required|integer',
+            'floorNum'  => 'required|string',
             'roomNum' =>'required|integer',
             'pathRoomNum' =>'required|integer',
             'description' =>'nullable|string',
