@@ -24,100 +24,8 @@ class ChaletController extends Controller
 
 
 
-//     public function create(ChaletRequest $request)
-// {
-//     if (auth()->guard('broker')->check()) {
-//         $broker = auth()->guard('broker')->user();
-//         $brokerId = $broker->id;
-//         $userId = null;
-//     } elseif (auth()->guard('api')->check()) {
-//         $user = auth()->guard('api')->user();
-//         $userId = $user->id;
-//         $brokerId = null;
-//     } else {
-//         return response()->json([
-//             'success' => false,
-//             'message' => 'Unauthenticated.',
-//         ], 401);
-//     }
-
-//     $chalet = Chalet::create([
-//         'user_id' => $userId,
-//         'broker_id' => $brokerId,
-//         'installment_id' => $request->installment_id,
-//         'finishe_id' => $request->finishe_id,
-//         'transaction_id' => $request->transaction_id,
-//         'property_id' => $request->property_id,
-//         'water_id' => $request->water_id,
-//         'electricty_id' => $request->electricty_id,
-//         'sale' => 'notSold',
-//         'status' => 'notActive',
-//         'governorate' => $request->governorate,
-//         'city' => $request->city,
-//         'district' => $request->district,
-//         'street' => $request->street,
-//         'locationGPS' => $request->locationGPS,
-//         'propertyNum' => $request->propertyNum,
-//         'floorNum' => $request->floorNum,
-//         'roomNum' => $request->roomNum,
-//         'pathRoomNum' => $request->pathRoomNum,
-//         'description' => $request->description,
-//         'area' => $request->area,
-//         'gardenArea' => $request->gardenArea,
-//         'ownerType' => $request->ownerType,
-//         'creationDate' => now()->timezone('Africa/Cairo')->format('Y-m-d H:i:s'),
-//         'totalPrice' => $request->totalPrice,
-//         'installmentPrice' => $request->installmentPrice,
-//         'downPrice' => $request->downPrice,
-//         'rentPrice' => $request->rentPrice,
-//     ]);
-
-//     if ($request->hasFile('media')) {
-//         foreach ($request->file('media') as $file) {
-//             try {
-//                 $path = $file->store('Chalet', 'public');
-
-//                 $allowedExtensions = [
-//                     'image' => ['jpeg', 'jpg', 'png', 'gif', 'webp'],
-//                     'video' => ['mp4', 'mov', 'avi', 'mkv'],
-//                     'audio' => ['mp3', 'wav', 'aac', 'ogg', 'flac', 'm4a']
-//                 ];
-
-//                 $extension = $file->getClientOriginalExtension();
-//                 $mediaType = null;
-
-//                 foreach ($allowedExtensions as $type => $extensions) {
-//                     if (in_array($extension, $extensions)) {
-//                         $mediaType = $type;
-//                         break;
-//                     }
-//                 }
-
-//                 if ($mediaType) {
-//                     $chalet->media()->create([
-//                         'path' => $path,
-//                         'type' => $mediaType,
-//                     ]);
-//                 }
-//             } catch (\Exception $e) {
-//                 Log::error('Error uploading file: ' . $e->getMessage());
-//                 return response()->json([
-//                     'success' => false,
-//                     'message' => 'Error uploading media files.',
-//                 ], 500);
-//             }
-//         }
-//     }
-
-//     return response()->json([
-//         'data' => new ChaletResource($chalet),
-//         'message' => 'Chalet Created Successfully.',
-//     ]);
-// }
-
-public function create(ChaletRequest $request)
+    public function create(ChaletRequest $request)
 {
-    // التحقق من الجارد النشط
     if (auth()->guard('broker')->check()) {
         $broker = auth()->guard('broker')->user();
         $brokerId = $broker->id;
@@ -133,7 +41,6 @@ public function create(ChaletRequest $request)
         ], 401);
     }
 
-    // إنشاء سجل Chalet
     $chalet = Chalet::create([
         'user_id' => $userId,
         'broker_id' => $brokerId,
@@ -165,35 +72,41 @@ public function create(ChaletRequest $request)
         'rentPrice' => $request->rentPrice,
     ]);
 
-    // معالجة رفع الصور
-    if ($request->hasFile('image')) {
-        foreach ($request->file('image') as $image) {
-            $imagePath = $image->store('Chalet/images', 'public');
-            $chalet->media()->create([
-                'path' => $imagePath,
-                'type' => 'image',
-            ]);
+    if ($request->hasFile('media')) {
+        foreach ($request->file('media') as $file) {
+            try {
+                $path = $file->store('Chalet', 'public');
+
+                $allowedExtensions = [
+                    'image' => ['jpeg', 'jpg', 'png', 'gif', 'webp'],
+                    'video' => ['mp4', 'mov', 'avi', 'mkv'],
+                    'audio' => ['mp3', 'wav', 'aac', 'ogg', 'flac', 'm4a']
+                ];
+
+                $extension = $file->getClientOriginalExtension();
+                $mediaType = null;
+
+                foreach ($allowedExtensions as $type => $extensions) {
+                    if (in_array($extension, $extensions)) {
+                        $mediaType = $type;
+                        break;
+                    }
+                }
+
+                if ($mediaType) {
+                    $chalet->media()->create([
+                        'path' => $path,
+                        'type' => $mediaType,
+                    ]);
+                }
+            } catch (\Exception $e) {
+                Log::error('Error uploading file: ' . $e->getMessage());
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error uploading media files.',
+                ], 500);
+            }
         }
-    }
-
-    // معالجة رفع الفيديو
-    if ($request->hasFile('video')) {
-        $video = $request->file('video');
-        $videoPath = $video->store('Chalet/videos', 'public');
-        $chalet->media()->create([
-            'path' => $videoPath,
-            'type' => 'video',
-        ]);
-    }
-
-    // معالجة رفع الملفات الصوتية
-    if ($request->hasFile('audio')) {
-        $audio = $request->file('audio');
-        $audioPath = $audio->store('Chalet/audios', 'public');
-        $chalet->media()->create([
-            'path' => $audioPath,
-            'type' => 'audio',
-        ]);
     }
 
     return response()->json([
@@ -201,6 +114,8 @@ public function create(ChaletRequest $request)
         'message' => 'Chalet Created Successfully.',
     ]);
 }
+
+
 
 
 
