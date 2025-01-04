@@ -43,7 +43,7 @@ class Chalet extends Model
 
     public function media()
     {
-        return $this->morphOne(Media::class, 'mediaable');
+        return $this->morphMany(Media::class, 'mediaable');
     }
 
     public function electricty()

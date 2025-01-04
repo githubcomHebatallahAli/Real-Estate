@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('chalets', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('broker_id')->constrained('brokers')->nullable()->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained('users')->nullable()->cascadeOnDelete();
+            $table->foreignId('broker_id')->nullable()->constrained('brokers')->cascadeOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
             $table->foreignId('installment_id')->constrained('installments')->cascadeOnDelete();
             $table->foreignId('finishe_id')->constrained('finishes')->cascadeOnDelete();
             $table->foreignId('transaction_id')->constrained('transactions')->cascadeOnDelete();

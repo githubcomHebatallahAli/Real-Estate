@@ -25,31 +25,34 @@ class MediaRequest extends FormRequest
     {
         return [
 
-                'media.*.file' => [
-                    'nullable',
-                    'file',
-                    function ($attribute, $value, $fail) {
-                        $allowedAudioExtensions = ['mp3', 'wav', 'aac', 'ogg', 'flac', 'm4a'];
-                        $allowedImageExtensions = ['jpeg', 'png', 'jpg', 'gif', 'webp', 'bmp', 'svg'];
-                        $allowedVideoExtensions = ['mp4', 'mov', 'avi', 'mkv', 'flv', 'wmv', 'webm', '3gp'];
+            'media.*.file' => [
+                'nullable',
+                'file',
+                'max:10240', // الحجم الأقصى 10 ميجابايت
+                function ($attribute, $value, $fail) {
+                    $allowedExtensions = [
+                        'audio' => ['mp3', 'wav', 'aac', 'ogg', 'flac', 'm4a'],
+                        'image' => ['jpeg', 'png', 'jpg', 'gif', 'webp', 'bmp', 'svg'],
+                        'video' => ['mp4', 'mov', 'avi', 'mkv', 'flv', 'wmv', 'webm', '3gp'],
+                    ];
 
-                        $extension = $value->getClientOriginalExtension();
-                        $type = request()->input(str_replace('.file', '.type', $attribute));
+                    $extension = $value->getClientOriginalExtension();
+                    $type = request()->input(str_replace('.file', '.type', $attribute));
 
-                        if ($type === 'audio' && !in_array($extension, $allowedAudioExtensions)) {
-                            $fail("يجب أن يكون الملف الصوتي من الأنواع التالية: " . implode(', ', $allowedAudioExtensions) . ".");
-                        } elseif ($type === 'image' && !in_array($extension, $allowedImageExtensions)) {
-                            $fail("يجب أن تكون الصورة من الأنواع التالية: " . implode(', ', $allowedImageExtensions) . ".");
-                        } elseif ($type === 'video' && !in_array($extension, $allowedVideoExtensions)) {
-                            $fail("يجب أن يكون الفيديو من الأنواع التالية: " . implode(', ', $allowedVideoExtensions) . ".");
-                        }
-                    },
-                ],
-                'media.*.type' => 'required|in:image,video,audio',
-                'media.*.file' => 'max:10240',
+                    if (!array_key_exists($type, $allowedExtensions)) {
+                        $fail("نوع الميديا غير مدعوم.");
+                        return;
+                    }
 
-
+                    if (!in_array($extension, $allowedExtensions[$type])) {
+                        $fail("يجب أن يكون الملف من الأنواع التالية لـ $type: " . implode(', ', $allowedExtensions[$type]) . ".");
+                    }
+                },
+            ],
+            'media.*.type' => 'required|in:image,video,audio',
         ];
+
+        
     }
 
     public function failedValidation(Validator $validator)

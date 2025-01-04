@@ -40,7 +40,7 @@ class ChaletRequest extends FormRequest
             'locationGPS' => 'nullable|string',
             'facade'=> 'nullable|string',
             'propertyNum' => 'nullable|integer',
-            'floorNum'  => 'required|string',
+            'floorNum'  => 'nullable|string',
             'roomNum' =>'required|integer',
             'pathRoomNum' =>'required|integer',
             'description' =>'nullable|string',
