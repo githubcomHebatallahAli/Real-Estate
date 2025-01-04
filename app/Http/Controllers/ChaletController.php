@@ -168,7 +168,7 @@ class ChaletController extends Controller
                 $allowedExtensions = [
                     'image' => ['jpeg', 'jpg', 'png', 'gif', 'webp'],
                     'video' => ['mp4', 'mov', 'avi', 'mkv'],
-                    'audio' => ['mp3', 'wav', 'aac']
+                    'audio' => ['mp3', 'wav', 'aac', 'ogg', 'flac', 'm4a']
                 ];
 
                 $extension = $file->getClientOriginalExtension();
