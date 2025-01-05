@@ -20,8 +20,6 @@ class MediaResource extends JsonResource
             'type' => $this->type,
             // 'mediaable_type' => $this->mediaable_type,
             // 'mediaable_id' => $this->mediaable_id,
-
-
     ];
     }
 }
