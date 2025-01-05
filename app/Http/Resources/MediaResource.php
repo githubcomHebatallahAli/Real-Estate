@@ -22,30 +22,32 @@ class MediaResource extends JsonResource
             // 'mediaable_id' => $this->mediaable_id,
 
 
-            $mediaItems = $this->media ?? collect();  // إذا كانت media null، استخدم مجموعة فارغة
+            $images = $this->media->where('type', 'image');
+            $videos = $this->media->where('type', 'video');
+            $audios = $this->media->where('type', 'audio');
 
             return [
-                'image' => $mediaItems->where('type', 'image')->isNotEmpty() ? $mediaItems->where('type', 'image')->map(function ($item) {
+                'image' => $images->map(function ($media) {
                     return [
-                        'id' => $item->id,
-                        'path' => $item->path,
-                        'type' => $item->type,
+                        'id' => $media->id,
+                        'path' => $media->path,
+                        'type' => $media->type,
                     ];
-                }) : [],
-                'video' => $mediaItems->where('type', 'video')->isNotEmpty() ? $mediaItems->where('type', 'video')->map(function ($item) {
+                }),
+                'video' => $videos->map(function ($media) {
                     return [
-                        'id' => $item->id,
-                        'path' => $item->path,
-                        'type' => $item->type,
+                        'id' => $media->id,
+                        'path' => $media->path,
+                        'type' => $media->type,
                     ];
-                }) : [],
-                'audio' => $mediaItems->where('type', 'audio')->isNotEmpty() ? $mediaItems->where('type', 'audio')->map(function ($item) {
+                }),
+                'audio' => $audios->map(function ($media) {
                     return [
-                        'id' => $item->id,
-                        'path' => $item->path,
-                        'type' => $item->type,
+                        'id' => $media->id,
+                        'path' => $media->path,
+                        'type' => $media->type,
                     ];
-                }) : [],
+                }),
             ];
     }
 }
