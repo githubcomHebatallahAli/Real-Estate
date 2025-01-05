@@ -22,9 +22,9 @@ class MediaResource extends JsonResource
             // 'mediaable_id' => $this->mediaable_id,
 
 
-            $images = $this->media->where('type', 'image');
-            $videos = $this->media->where('type', 'video');
-            $audios = $this->media->where('type', 'audio');
+            $images = $this->media ? $this->media->where('type', 'image') : collect();
+            $videos = $this->media ? $this->media->where('type', 'video') : collect();
+            $audios = $this->media ? $this->media->where('type', 'audio') : collect();
 
             return [
                 'image' => $images->map(function ($media) {
