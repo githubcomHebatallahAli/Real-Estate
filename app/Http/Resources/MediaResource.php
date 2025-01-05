@@ -25,30 +25,27 @@ class MediaResource extends JsonResource
             $mediaItems = $this->media ?? collect();  // إذا كانت media null، استخدم مجموعة فارغة
 
             return [
-                'id' => $this->id,
-                'image' => $mediaItems->where('type', 'image')->map(function ($mediaItem) {
+                'image' => $mediaItems->where('type', 'image')->isNotEmpty() ? $mediaItems->where('type', 'image')->map(function ($item) {
                     return [
-                        'id' => $mediaItem->id,
-                        'path' => $mediaItem->path,  // المسار كما هو
-                        'type' => $mediaItem->type,
+                        'id' => $item->id,
+                        'path' => $item->path,
+                        'type' => $item->type,
                     ];
-                }),
-
-                'video' => $mediaItems->where('type', 'video')->map(function ($mediaItem) {
+                }) : [],
+                'video' => $mediaItems->where('type', 'video')->isNotEmpty() ? $mediaItems->where('type', 'video')->map(function ($item) {
                     return [
-                        'id' => $mediaItem->id,
-                        'path' => $mediaItem->path,  // المسار كما هو
-                        'type' => $mediaItem->type,
+                        'id' => $item->id,
+                        'path' => $item->path,
+                        'type' => $item->type,
                     ];
-                }),
-
-                'audio' => $mediaItems->where('type', 'audio')->map(function ($mediaItem) {
+                }) : [],
+                'audio' => $mediaItems->where('type', 'audio')->isNotEmpty() ? $mediaItems->where('type', 'audio')->map(function ($item) {
                     return [
-                        'id' => $mediaItem->id,
-                        'path' => $mediaItem->path,  // المسار كما هو
-                        'type' => $mediaItem->type,
+                        'id' => $item->id,
+                        'path' => $item->path,
+                        'type' => $item->type,
                     ];
-                }),
+                }) : [],
             ];
     }
 }
