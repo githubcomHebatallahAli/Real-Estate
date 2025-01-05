@@ -14,7 +14,7 @@ class MediaResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
+        // return [
             // 'id' => $this->id,
             // 'path' => $this->path,
             // 'type' => $this->type,
@@ -22,30 +22,33 @@ class MediaResource extends JsonResource
             // 'mediaable_id' => $this->mediaable_id,
 
 
-         'id' => $this->id,
-            'image' => $this->media->where('type', 'image')->map(function ($mediaItem) {
-                return [
-                    'id' => $mediaItem->id,
-                    'path' => $mediaItem->path,  // المسار كما هو
-                    'type' => $mediaItem->type,
-                ];
-            }),
+            $mediaItems = $this->media ?? collect();  // إذا كانت media null، استخدم مجموعة فارغة
 
-            'video' => $this->media->where('type', 'video')->map(function ($mediaItem) {
-                return [
-                    'id' => $mediaItem->id,
-                    'path' => $mediaItem->path,  // المسار كما هو
-                    'type' => $mediaItem->type,
-                ];
-            }),
+            return [
+                'id' => $this->id,
+                'image' => $mediaItems->where('type', 'image')->map(function ($mediaItem) {
+                    return [
+                        'id' => $mediaItem->id,
+                        'path' => $mediaItem->path,  // المسار كما هو
+                        'type' => $mediaItem->type,
+                    ];
+                }),
 
-            'audio' => $this->media->where('type', 'audio')->map(function ($mediaItem) {
-                return [
-                    'id' => $mediaItem->id,
-                    'path' => $mediaItem->path,  // المسار كما هو
-                    'type' => $mediaItem->type,
-                ];
-            }),
-        ];
+                'video' => $mediaItems->where('type', 'video')->map(function ($mediaItem) {
+                    return [
+                        'id' => $mediaItem->id,
+                        'path' => $mediaItem->path,  // المسار كما هو
+                        'type' => $mediaItem->type,
+                    ];
+                }),
+
+                'audio' => $mediaItems->where('type', 'audio')->map(function ($mediaItem) {
+                    return [
+                        'id' => $mediaItem->id,
+                        'path' => $mediaItem->path,  // المسار كما هو
+                        'type' => $mediaItem->type,
+                    ];
+                }),
+            ];
     }
 }
