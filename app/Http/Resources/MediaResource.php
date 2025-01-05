@@ -14,40 +14,14 @@ class MediaResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        // return [
-            // 'id' => $this->id,
-            // 'path' => $this->path,
-            // 'type' => $this->type,
+        return [
+            'id' => $this->id,
+            'path' => $this->path,
+            'type' => $this->type,
             // 'mediaable_type' => $this->mediaable_type,
             // 'mediaable_id' => $this->mediaable_id,
 
 
-            $images = $this->media ? $this->media->where('type', 'image') : collect();
-            $videos = $this->media ? $this->media->where('type', 'video') : collect();
-            $audios = $this->media ? $this->media->where('type', 'audio') : collect();
-
-            return [
-                'image' => $images->map(function ($media) {
-                    return [
-                        'id' => $media->id,
-                        'path' => $media->path,
-                        'type' => $media->type,
-                    ];
-                }),
-                'video' => $videos->map(function ($media) {
-                    return [
-                        'id' => $media->id,
-                        'path' => $media->path,
-                        'type' => $media->type,
-                    ];
-                }),
-                'audio' => $audios->map(function ($media) {
-                    return [
-                        'id' => $media->id,
-                        'path' => $media->path,
-                        'type' => $media->type,
-                    ];
-                }),
-            ];
+    ];
     }
 }
