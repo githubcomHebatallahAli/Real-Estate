@@ -17,4 +17,11 @@ Route::controller(ChaletController::class)->group(
    Route::get('/showDeleted/chalet', 'showDeleted');
 Route::get('/restore/chalet/{id}','restore');
 Route::delete('/forceDelete/chalet/{id}','forceDelete');
+Route::patch('sold/chalet/{id}', 'sold');
+Route::patch('notSold/chalet/{id}', 'notSold');
+Route::patch('admin/active/chalet/{id}', 'active')->middleware('admin');
+Route::patch('admin/notActive/chalet/{id}', 'notActive')->middleware('admin');
    });
+
+
+

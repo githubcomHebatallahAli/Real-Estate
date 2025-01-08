@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Chalet;
+use App\Policies\ChaletPolicy;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -24,5 +26,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('manage_users', function($user) {
             return    Auth::guard('admin')->check();
         });
+
+        Gate::define('updateSale', [ChaletPolicy::class, 'updateSale']);
+
+        Gate::policy(Chalet::class, ChaletPolicy::class);
     }
 }

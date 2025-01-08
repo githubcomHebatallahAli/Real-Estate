@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('governorate');
             $table->string('address');
-            $table->string('phoNum')->unique();;
+            $table->string('phoNum')->unique();
             $table->boolean('is_verified')->default(false);
             $table->timestamp('otp_sent_at')->nullable();
             $table->foreignId('role_id')->nullable()->constrained('roles')->cascadeOnDelete();

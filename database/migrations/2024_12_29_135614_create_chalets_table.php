@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('broker_id')->nullable()->constrained('brokers')->cascadeOnDelete();
             $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
+            $table->foreignId('admin_id')->nullable()->constrained('admins')->cascadeOnDelete();
             $table->foreignId('installment_id')->constrained('installments')->cascadeOnDelete();
             $table->foreignId('finishe_id')->constrained('finishes')->cascadeOnDelete();
             $table->foreignId('transaction_id')->constrained('transactions')->cascadeOnDelete();

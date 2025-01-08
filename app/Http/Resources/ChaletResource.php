@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\Auth\UserRegisterResource;
+use App\Http\Resources\Auth\AdminRegisterResource;
 use App\Http\Resources\Auth\BrokerRegisterResource;
 
 class ChaletResource extends JsonResource
@@ -20,6 +21,7 @@ class ChaletResource extends JsonResource
             'id'=>$this-> id,
             'broker' => new BrokerRegisterResource($this->broker),
             'user' => new UserRegisterResource($this->user),
+            'admin' => new AdminRegisterResource($this->admin),
             'installment' => new MainResource($this->installment),
             'transaction'=> new MainResource($this->transaction),
             'property'=> new MainResource($this->property),

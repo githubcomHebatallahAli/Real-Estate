@@ -39,6 +39,11 @@ class Admin extends Authenticatable  implements JWTSubject
         return $this->morphOne(Media::class, 'mediaable');
     }
 
+    public function chalets()
+    {
+        return $this->hasMany(Chalet::class);
+    }
+
     protected $hidden = [
         'password',
         'remember_token',

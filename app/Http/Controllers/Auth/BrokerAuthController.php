@@ -32,11 +32,11 @@ class BrokerAuthController extends Controller
 
         $broker = auth()->guard('broker')->user();
 
-        if (!$broker->is_verified) {
-            return response()->json([
-                'message' => 'Your account is not verified. Please verify your phone number.'
-            ], 403);
-        }
+        // if (!$broker->is_verified) {
+        //     return response()->json([
+        //         'message' => 'Your account is not verified. Please verify your phone number.'
+        //     ], 403);
+        // }
 
         if ($broker->ip !== $request->ip()) {
             $broker->ip = $request->ip();

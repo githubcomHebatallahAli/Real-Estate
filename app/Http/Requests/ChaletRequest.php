@@ -27,6 +27,7 @@ class ChaletRequest extends FormRequest
             'creationDate'=> 'nullable|date_format:Y-m-d H:i:s',
             'broker_id' => 'nullable|exists:brokers,id',
             'user_id' => 'nullable|exists:users,id',
+            'admin_id' => 'nullable|exists:admins,id',
             'installment_id' => 'required|exists:installments,id',
             'finishe_id' => 'required|exists:finishes,id',
             'transaction_id' => 'required|exists:transactions,id',

@@ -1,7 +1,9 @@
 <?php
 
 use App\Models\Admin;
+use App\Models\Chalet;
 use App\Policies\AdminPolicy;
+use App\Policies\ChaletPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -28,5 +30,6 @@ return Application::configure(basePath: dirname(__DIR__))
     ->booted(function() {
 
         Gate::policy(Admin::class, AdminPolicy::class);
+        Gate::policy(Chalet::class, ChaletPolicy::class);
 
 })->create();

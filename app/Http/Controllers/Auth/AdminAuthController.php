@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Carbon\Carbon;
 use App\Models\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\Auth\AdminLoginRequest;
 use App\Http\Requests\Auth\AdminRegisterRequest;
 use App\Http\Resources\Auth\AdminRegisterResource;
-use Carbon\Carbon;
 
 class AdminAuthController extends Controller
 {
-    public function login(LoginRequest $request)
+    public function login(AdminLoginRequest $request)
     {
         $validator = Validator::make($request->all(), $request->rules());
 

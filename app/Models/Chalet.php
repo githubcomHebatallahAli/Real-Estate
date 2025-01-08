@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -12,6 +13,7 @@ class Chalet extends Model
     protected $fillable = [
             'broker_id',
             'user_id',
+            'admin_id',
             'installment_id',
             'finishe_id',
             'transaction_id',
@@ -45,6 +47,31 @@ class Chalet extends Model
     {
         return $this->morphMany(Media::class, 'mediaable');
     }
+
+    
+protected static function boot()
+{
+    parent::boot();
+    static::deleting(function ($chalet) {
+
+        $chalet->media->each(function ($media) {
+            if (Storage::disk('public')->exists($media->path)) {
+                Storage::disk('public')->delete($media->path);
+            }
+            $media->delete();
+        });
+    });
+
+    static::forceDeleting(function ($chalet) {
+        $chalet->media->each(function ($media) {
+            if (Storage::disk('public')->exists($media->path)) {
+                Storage::disk('public')->delete($media->path);
+            }
+            $media->forceDelete();
+        });
+    });
+}
+
 
     public function electricty()
     {
@@ -89,5 +116,9 @@ class Chalet extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function admin()
+    {
+        return $this->belongsTo(Admin::class);
     }
 }
