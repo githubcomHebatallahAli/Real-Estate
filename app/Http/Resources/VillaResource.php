@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\Auth\UserRegisterResource;
+use App\Http\Resources\Auth\AdminRegisterResource;
 use App\Http\Resources\Auth\BrokerRegisterResource;
 
 class VillaResource extends JsonResource
@@ -20,6 +21,7 @@ class VillaResource extends JsonResource
             'id'=>$this-> id,
             'broker' => new BrokerRegisterResource($this->broker),
             'user' => new UserRegisterResource($this->user),
+            'admin' => new AdminRegisterResource($this->admin),
             'installment' => new MainResource($this->installment),
             'transaction'=> new MainResource($this->transaction),
             'property'=> new MainResource($this->property),
@@ -43,7 +45,7 @@ class VillaResource extends JsonResource
             'installmentPrice'=>$this-> installmentprice,
             'downPrice'=>$this-> downPrice,
             'rentPrice'=>$this-> rentPrice,
-            'media' => new MediaResource($this->whenLoaded('media')),
+            // 'media' => MediaResource::collection($this->media),
             'floorNum' =>$this-> floorNum,
             'reciptionNum' =>$this-> reciptionNum,
             'roomNum' =>$this-> roomNum,
@@ -51,6 +53,10 @@ class VillaResource extends JsonResource
             'kitchenNum' =>$this-> kitchenNum,
             'gardenArea' =>$this-> gardenArea,
             'pathRoomNum' =>$this-> pathRoomNum,
+            'mainImage' =>$this-> mainImage,
+            'image' =>$this-> image,
+            'video' =>$this-> video,
+            'audio' =>$this-> audio,
         ];
     }
 }

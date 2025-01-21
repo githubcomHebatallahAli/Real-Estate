@@ -31,7 +31,7 @@ class UserRegisterRequest extends FormRequest
             'governorate' =>'required|string',
             'address' => 'required|string',
             // 'usertype_id'  => 'required|exists:usertypes,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 

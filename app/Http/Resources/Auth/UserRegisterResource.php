@@ -3,10 +3,9 @@
 namespace App\Http\Resources\Auth;
 
 use Illuminate\Http\Request;
-use App\Http\Resources\MainResource;
-use App\Http\Resources\ImageResource;
+
 use App\Http\Resources\MediaResource;
-use App\Http\Resources\Admin\UserTypeResource;
+
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserRegisterResource extends JsonResource
@@ -27,7 +26,7 @@ class UserRegisterResource extends JsonResource
             'address' => $this -> address,
             // 'userType' => new UserTypeResource($this->userType),
             'userType' => $this -> userType,
-            'media' => new MediaResource($this->whenLoaded('media')),
+            'photo'=>$this->photo,
         ];
     }
 }

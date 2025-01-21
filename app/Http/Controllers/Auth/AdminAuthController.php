@@ -4,10 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use Carbon\Carbon;
 use App\Models\Admin;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
-use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\Auth\AdminLoginRequest;
 use App\Http\Requests\Auth\AdminRegisterRequest;
@@ -71,6 +69,11 @@ class AdminAuthController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
+        if ($request->hasFile('photo')) {
+            $photoPath = $request->file('photo')->store(Admin::PHOTO_FOLDER);
+            // dd($photoPath);
+        }
+
 
         $adminData = array_merge(
             $validator->validated(),
@@ -78,17 +81,21 @@ class AdminAuthController extends Controller
     ['ip' => $request->ip()]
         );
 
+        if (isset($photoPath)) {
+            $adminData['photo'] = $photoPath;
+        }
+
 
 
         $admin = Admin::create($adminData);
 
-        if ($request->hasFile('media')) {
+        // if ($request->hasFile('media')) {
 
-            $path = $request->file('media')->store('admin', 'public');
-            $admin->media()->create(['path' => $path]);
-        }
+        //     $path = $request->file('media')->store('admin', 'public');
+        //     $admin->media()->create(['path' => $path]);
+        // }
 
-        $admin->load('media');
+        // $admin->load('media');
 
         $admin->save();
         // $admin->notify(new EmailVerificationNotification());

@@ -35,7 +35,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->integer('area');
             $table->integer('gardenArea')->nullable();
-            $table->string('ownerType');
+            $table->string('ownerType')->nullable();
             $table->integer('totalPrice')->nullable();
             $table->integer('installmentPrice')->nullable();
             $table->integer('downPrice')->nullable();
@@ -43,6 +43,10 @@ return new class extends Migration
             $table->timestamp('creationDate')->nullable();
             $table->enum('status', ['active', 'notActive'])->default('notActive')->nullable();
             $table->enum('sale', ['sold', 'notSold'])->default('notSold')->nullable();
+            $table->string('mainImage')->nullable();
+            $table->json('image')->nullable();
+            $table->string('video')->nullable();
+            $table->string('audio')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

@@ -11,14 +11,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements JWTSubject
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, SoftDeletes;
+    const PHOTO_FOLDER = 'User';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
         'email',
@@ -27,6 +22,7 @@ class User extends Authenticatable implements JWTSubject
         'address',
         'phoNum',
         'userType',
+        'photo',
         'last_login_at',
         'last_logout_at',
         'session_duration',
@@ -85,29 +81,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Office::class);
     }
 
-    // public function userType()
-    // {
-    //     return $this->belongsTo(userType::class);
-    // }
-
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-
-
-
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [

@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\Auth\UserRegisterResource;
+use App\Http\Resources\Auth\AdminRegisterResource;
 use App\Http\Resources\Auth\BrokerRegisterResource;
 
 class FlatResource extends JsonResource
@@ -20,6 +21,7 @@ class FlatResource extends JsonResource
             'id'=>$this-> id,
             'broker' => new BrokerRegisterResource($this->broker),
             'user' => new UserRegisterResource($this->user),
+            'admin' => new AdminRegisterResource($this->admin),
             'installment' => new MainResource($this->installment),
             'transaction'=> new MainResource($this->transaction),
             'property'=> new MainResource($this->property),
@@ -43,11 +45,17 @@ class FlatResource extends JsonResource
             'installmentPrice'=>$this-> installmentprice,
             'downPrice'=>$this-> downPrice,
             'rentPrice'=>$this-> rentPrice,
-            'media' => new MediaResource($this->whenLoaded('media')),
+            // 'media' => MediaResource::collection($this->media),
             'floorNum' =>$this-> floorNum,
             'flatNum' =>$this-> flatNum,
             'roomNum' =>$this-> roomNum,
             'pathRoomNum' =>$this-> pathRoomNum,
+            'gardenArea' =>$this-> gardenArea,
+            'roofArea' =>$this-> roofArea,
+            'mainImage' =>$this-> mainImage,
+            'image' =>$this-> image,
+            'video' =>$this-> video,
+            'audio' =>$this-> audio,
         ];
     }
 }

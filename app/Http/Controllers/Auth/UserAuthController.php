@@ -5,13 +5,11 @@ namespace App\Http\Controllers\Auth;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Support\Facades\Validator;
 use App\Notifications\SuccessfulRegistration;
 use App\Http\Requests\Auth\UserRegisterRequest;
 use App\Http\Resources\Auth\UserRegisterResource;
-use App\Http\Requests\Auth\VerficationPhoNumRequest;
 
 class UserAuthController extends Controller
 {
@@ -116,6 +114,11 @@ class UserAuthController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
+        if ($request->hasFile('photo')) {
+            $photoPath = $request->file('photo')->store(User::PHOTO_FOLDER);
+            // dd($photoPath);
+        }
+
 
         $userData = array_merge(
             $validator->validated(),
@@ -123,6 +126,10 @@ class UserAuthController extends Controller
             ['ip' => $request->ip()],
             ['userType' => $request->userType ?? 'user']
         );
+
+        if (isset($photoPath)) {
+            $userData['photo'] = $photoPath;
+        }
 
         $user = User::create($userData);
 

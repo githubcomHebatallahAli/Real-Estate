@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('lands', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('broker_id')->constrained('brokers')->nullable()->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained('users')->nullable()->cascadeOnDelete();
+            $table->foreignId('broker_id')->nullable()->constrained('brokers')->cascadeOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
+            $table->foreignId('admin_id')->nullable()->constrained('admins')->cascadeOnDelete();
             $table->foreignId('installment_id')->constrained('installments')->cascadeOnDelete();
             $table->foreignId('transaction_id')->constrained('transactions')->cascadeOnDelete();
             $table->foreignId('property_id')->constrained('properties')->cascadeOnDelete();
@@ -31,7 +32,7 @@ return new class extends Migration
             $table->integer('area');
             $table->integer('length');
             $table->integer('width');
-            $table->string('ownerType');
+            $table->string('ownerType')->nullable();
             $table->integer('totalPrice')->nullable();
             $table->integer('installmentPrice')->nullable();
             $table->integer('downPrice')->nullable();
@@ -39,6 +40,10 @@ return new class extends Migration
             $table->timestamp('creationDate')->nullable();
             $table->enum('status', ['active', 'notActive'])->default('notActive')->nullable();
             $table->enum('sale', ['sold', 'notSold'])->default('notSold')->nullable();
+            $table->string('mainImage')->nullable();
+            $table->json('image')->nullable();
+            $table->string('video')->nullable();
+            $table->string('audio')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

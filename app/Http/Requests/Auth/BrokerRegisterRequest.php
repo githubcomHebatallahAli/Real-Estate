@@ -37,7 +37,7 @@ class BrokerRegisterRequest extends FormRequest
             'password' => 'required|string|confirmed|min:6',
             'password' => 'required|string|confirmed|min:6',
             // 'usertype_id'  => 'required|exists:usertypes,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 

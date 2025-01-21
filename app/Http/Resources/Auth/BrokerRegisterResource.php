@@ -31,7 +31,7 @@ class BrokerRegisterResource extends JsonResource
             'commission' => $this -> commission,
             'brief' => $this -> brief,
             'realEstateType' => $this -> realEstateType,
-            'media' => new MediaResource($this->whenLoaded('media')),
+            'photo'=>$this->photo,
         ];
 
     }

@@ -2,16 +2,43 @@
 
 namespace App\Models;
 
+use App\Traits\DeletesMediaTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Land extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, DeletesMediaTrait,HandlesMediaTrait;
+    const MAIN_IMAGE_FOLDER = 'Land/mainImages';
+    const IMAGE_FOLDER = 'Land/images';
+    const VIDEO_FOLDER = 'Land/videos';
+    const AUDIO_FOLDER = 'Land/audios';
+
+    public function handleFileCreateMedia($request)
+    {
+        $this->handleFiles($request, $this, [
+            'mainImage' => self::MAIN_IMAGE_FOLDER,
+            'image' => self::IMAGE_FOLDER,
+            'video' => self::VIDEO_FOLDER,
+            'audio' => self::AUDIO_FOLDER,
+        ]);
+    }
+
+    public function handleFileUpdateMedia($request)
+    {
+        $this->handleFiles($request, $this, [
+            'mainImage' => self::MAIN_IMAGE_FOLDER,
+            'image' => self::IMAGE_FOLDER,
+            'video' => self::VIDEO_FOLDER,
+            'audio' => self::AUDIO_FOLDER,
+        ], true);
+    }
+
     protected $fillable = [
         'broker_id',
         'user_id',
+        'admin_id',
         'installment_id',
         'transaction_id',
         'property_id',
@@ -35,7 +62,15 @@ class Land extends Model
         'totalPrice',
         'installmentPrice',
         'downPrice',
-        'rentPrice'
+        'rentPrice',
+        'mainImage',
+        'image',
+        'video',
+        'audio',
+    ];
+
+    protected $casts = [
+        'image' => 'array',
     ];
 
     public function media()
@@ -81,5 +116,10 @@ class Land extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function admin()
+    {
+        return $this->belongsTo(Admin::class);
     }
 }

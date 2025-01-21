@@ -64,6 +64,11 @@ class BrokerAuthController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
+        if ($request->hasFile('photo')) {
+            $photoPath = $request->file('photo')->store(Broker::PHOTO_FOLDER);
+            // dd($photoPath);
+        }
+
         $brokerData = array_merge(
             $validator->validated(),
             ['password' => bcrypt($request->password)],
@@ -71,15 +76,19 @@ class BrokerAuthController extends Controller
             ['userType' => $request->userType ?? 'broker']
         );
 
-        $broker = Broker::create($brokerData);
-
-        if ($request->hasFile('media')) {
-
-            $path = $request->file('media')->store('broker', 'public');
-            $broker->media()->create(['path' => $path]);
+        if (isset($photoPath)) {
+            $brokerData['photo'] = $photoPath;
         }
 
-        $broker->load('media');
+        $broker = Broker::create($brokerData);
+
+        // if ($request->hasFile('media')) {
+
+        //     $path = $request->file('media')->store('broker', 'public');
+        //     $broker->media()->create(['path' => $path]);
+        // }
+
+        // $broker->load('media');
 
         // $broker->save();
         // $broker->notify(new EmailVerificationNotification());

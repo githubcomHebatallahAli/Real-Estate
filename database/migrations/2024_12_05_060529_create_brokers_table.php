@@ -27,6 +27,7 @@ return new class extends Migration
             $table->timestamp('otp_sent_at')->nullable();
             $table->string('targetPlace');
             $table->string('realEstateType');
+            $table->string('photo')->nullable();
             $table->string('ip')->nullable();
             $table->timestamp('last_login_at')->nullable();
             $table->timestamp('last_logout_at')->nullable();

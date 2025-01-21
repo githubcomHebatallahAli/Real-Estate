@@ -47,13 +47,22 @@ class ChaletRequest extends FormRequest
             'description' =>'nullable|string',
             'area' =>'required|integer',
             'gardenArea' =>'nullable|integer',
-            'ownerType' =>'required|string',
+            'ownerType' =>'nullable|string',
             'status'  =>'nullable|in:active,notActive',
             'sale' => 'nullable|in:sold,notSold',
             'totalPrice' =>'nullable|integer',
             'installmentPrice' =>'nullable|integer',
             'downPrice' =>'nullable|integer',
             'rentPrice' =>'nullable|integer',
+            'mainImage' => 'nullable|image|mimes:jpg,jpeg,png,gif,svg',
+            'image.*' => 'nullable|image|mimes:jpg,jpeg,png,gif,svg',
+            'video' => 'nullable|file|mimes:mp4,mov,avi,mkv,flv,wmv,webm,3gp',
+            // 'audio' => 'nullable|file|mimes:mp3,wav,aac,ogg,flac,m4a',
+            'audio' => 'nullable|file|extensions:m4a,mp3,wav,aac,ogg,flac',
+
+
+
+
 
         ];
     }

@@ -42,7 +42,7 @@ class ChaletController extends Controller
     if (!is_array($ids)) {
         return $ids;
     }
-    $chalet = Chalet::create([
+    $Chalet = Chalet::create([
         'user_id' => $ids['user_id'],
         'broker_id' => $ids['broker_id'],
         'admin_id' => $ids['admin_id'],
@@ -74,51 +74,15 @@ class ChaletController extends Controller
         'rentPrice' => $request->rentPrice,
     ]);
 
-    if ($request->hasFile('media')) {
-        foreach ($request->file('media') as $file) {
-            try {
-                $path = $file->store('Chalet', 'public');
+    $Chalet->handleFileCreateMedia($request);
 
-                $allowedExtensions = [
-                    'image' => ['jpeg', 'jpg', 'png', 'gif', 'webp'],
-                    'video' => ['mp4', 'mov', 'avi', 'mkv'],
-                    'audio' => ['mp3', 'wav', 'aac', 'ogg', 'flac', 'm4a']
-                ];
-
-                $extension = $file->getClientOriginalExtension();
-                $mediaType = null;
-
-                foreach ($allowedExtensions as $type => $extensions) {
-                    if (in_array($extension, $extensions)) {
-                        $mediaType = $type;
-                        break;
-                    }
-                }
-
-                if ($mediaType) {
-                    $chalet->media()->create([
-                        'path' => $path,
-                        'type' => $mediaType,
-                    ]);
-                }
-            } catch (\Exception $e) {
-                Log::error('Error uploading file: ' . $e->getMessage());
-                return response()->json([
-                    'message' => 'Error uploading media files.',
-                ], 500);
-            }
-        }
-    }
+    $Chalet->save();
 
     return response()->json([
-        'data' => new ChaletResource($chalet),
+        'data' => new ChaletResource($Chalet),
         'message' => 'Chalet Created Successfully.',
     ]);
 }
-
-
-
-
 
 
     public function edit(string $id)
@@ -185,60 +149,43 @@ public function update(ChaletRequest $request, string $id)
         "rentPrice" => $request->rentPrice
     ]);
 
-    if ($request->hasFile('media')) {
+    // if ($request->hasFile('mainImage')) {
+    //     if ($Chalet->mainImage) {
+    //         Storage::disk('public')->delete($Chalet->mainImage);
+    //     }
+    //     $mainImagePath = $request->file('mainImage')->store('Chalet/mainImages', 'public');
+    //     $Chalet->mainImage = $mainImagePath;
+    // }
 
-        $existingMedia = $Chalet->media;
+    // if ($request->hasFile('image')) {
+    //     $imagePaths = [];
+    //     foreach ($request->file('image') as $image) {
+    //         $imagePath = $image->store('Chalet/images', 'public');
+    //         $imagePaths[] = $imagePath;
+    //     }
 
-        foreach ($existingMedia as $media) {
-            try {
+    //     $Chalet->image = $imagePaths;
+    // }
 
-                if (Storage::disk('public')->exists($media->path)) {
-                    Storage::disk('public')->delete($media->path);
-                }
+    // if ($request->hasFile('video')) {
+    //     if ($Chalet->video) {
+    //         Storage::disk('public')->delete($Chalet->video);
+    //     }
+    //     $videoPath = $request->file('video')->store('Chalet/videos', 'public');
+    //     $Chalet->video = $videoPath;
+    // }
 
-                DB::table('media')
-                ->where('id', $media->id)
-                ->delete();
-            } catch (\Exception $e) {
-                Log::error('Error deleting old media: ' . $e->getMessage());
-            }
-        }
+    // if ($request->hasFile('audio')) {
+    //     if ($Chalet->audio) {
+    //         Storage::disk('public')->delete($Chalet->audio);
+    //     }
+    //     $audioPath = $request->file('audio')->store('Chalet/audios', 'public');
+    //     $Chalet->audio = $audioPath;
+    // }
 
-        foreach ($request->file('media') as $file) {
-            try {
-                $path = $file->store('Chalet', 'public');
+    $Chalet->handleFileUpdateMedia($request);
 
-                $allowedExtensions = [
-                    'image' => ['jpeg', 'jpg', 'png', 'gif', 'webp'],
-                    'video' => ['mp4', 'mov', 'avi', 'mkv'],
-                    'audio' => ['mp3', 'wav', 'aac', 'ogg', 'flac', 'm4a']
-                ];
-
-                $extension = $file->getClientOriginalExtension();
-                $mediaType = null;
-
-                foreach ($allowedExtensions as $type => $extensions) {
-                    if (in_array($extension, $extensions)) {
-                        $mediaType = $type;
-                        break;
-                    }
-                }
-
-                if ($mediaType) {
-                    $Chalet->media()->create([
-                        'path' => $path,
-                        'type' => $mediaType,
-                    ]);
-                }
-            } catch (\Exception $e) {
-                Log::error('Error uploading file: ' . $e->getMessage());
-                return response()->json([
-                    'message' => 'Error uploading media files.',
-                ], 500);
-            }
-        }
-    }
-
+    $Chalet->save();
 
     return response()->json([
         'data' => new ChaletResource($Chalet),
@@ -267,6 +214,7 @@ public function notActive(string $id)
 }
 public function active(string $id)
 {
+    $this->authorize('manage_users');
     $Chalet =Chalet::findOrFail($id);
 
     if (!$Chalet) {
@@ -336,7 +284,9 @@ public function sold(string $id)
       return $this->destroyModel(Chalet::class, ChaletResource::class, $id);
   }
 
-  public function showDeleted(){
+  public function showDeleted()
+  {
+    $this->authorize('manage_users');
   $Chalets=Chalet::onlyTrashed()->get();
   return response()->json([
       'data' =>ChaletResource::collection($Chalets),
@@ -346,7 +296,7 @@ public function sold(string $id)
 
   public function restore(string $id)
   {
-
+    $this->authorize('manage_users');
   $Chalet = Chalet::withTrashed()->where('id', $id)->first();
   if (!$Chalet) {
       return response()->json([

@@ -12,6 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class Broker extends Authenticatable  implements JWTSubject
 {
     use HasFactory, Notifiable, SoftDeletes;
+    const PHOTO_FOLDER = 'Broker';
     protected $fillable = [
         'name',
         'email',
@@ -24,6 +25,7 @@ class Broker extends Authenticatable  implements JWTSubject
         'commission',
         'brief',
         'realEstateType',
+        'photo',
         'last_login_at',
         'last_logout_at',
         'session_duration',

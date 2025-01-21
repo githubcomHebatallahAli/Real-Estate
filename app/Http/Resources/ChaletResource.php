@@ -49,7 +49,11 @@ class ChaletResource extends JsonResource
             'installmentPrice'=>$this-> installmentprice,
             'downPrice'=>$this-> downPrice,
             'rentPrice'=>$this-> rentPrice,
-            'media' => MediaResource::collection($this->media),
+            'mainImage' =>$this-> mainImage,
+            'image' =>$this-> image,
+            'video' =>$this-> video,
+            'audio' =>$this-> audio,
+            // 'media' => MediaResource::collection($this->media),
         ];
     }
 }

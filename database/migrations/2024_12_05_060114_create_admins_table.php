@@ -24,6 +24,7 @@ return new class extends Migration
             $table->timestamp('otp_sent_at')->nullable();
             $table->foreignId('role_id')->nullable()->constrained('roles')->cascadeOnDelete();
             $table->enum('status', ['active', 'notActive'])->default('active')->nullable();
+            $table->string('photo')->nullable();
             $table->string('ip')->nullable();
             $table->timestamp('last_login_at')->nullable();
             $table->timestamp('last_logout_at')->nullable();

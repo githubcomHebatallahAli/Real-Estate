@@ -27,7 +27,7 @@ class AdminRegisterResource extends JsonResource
             'status' => $this -> status,
             'governorate' => $this -> governorate,
             'address' => $this -> address,
-            'media' => new MediaResource($this->whenLoaded('media')),
+            'photo'=>$this->photo,
         ];
     }
 }
