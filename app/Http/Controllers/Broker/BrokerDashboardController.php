@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 class BrokerDashboardController extends Controller
 {
 
-    public function edit($brokerId)
+    public function editProperties($brokerId)
     {
 
         $broker = Broker::with([

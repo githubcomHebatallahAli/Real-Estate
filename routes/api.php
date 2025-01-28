@@ -16,4 +16,6 @@ require __DIR__ . '/Apis/Shop/shop.php';
 require __DIR__ . '/Apis/Land/land.php';
 require __DIR__ . '/Apis/Office/office.php';
 require __DIR__ . '/Apis/House/house.php';
+require __DIR__ . '/Apis/Broker/dashboard.php';
+require __DIR__ . '/Apis/Broker/profile.php';
 require __DIR__ . '/Apis/test.php';
