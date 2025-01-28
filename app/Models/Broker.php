@@ -111,7 +111,6 @@ class Broker extends Authenticatable  implements JWTSubject
         $this->save();
     }
 
-    // حدث يتم تنفيذه عند إنشاء أو تحديث أو حذف عقار
     protected static function booted()
     {
         static::updated(function ($broker) {
@@ -132,11 +131,7 @@ class Broker extends Authenticatable  implements JWTSubject
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+  
     protected function casts(): array
     {
         return [
