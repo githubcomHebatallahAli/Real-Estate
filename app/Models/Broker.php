@@ -26,6 +26,7 @@ class Broker extends Authenticatable  implements JWTSubject
         'brief',
         'realEstateType',
         'photo',
+        'ratingsCount',
         'last_login_at',
         'last_logout_at',
         'session_duration',
@@ -95,10 +96,36 @@ class Broker extends Authenticatable  implements JWTSubject
         return $this->hasMany(Office::class);
     }
 
-    // public function userType()
-    // {
-    //     return $this->belongsTo(userType::class);
-    // }
+    public function updatePropertiesCount()
+    {
+        $totalProperties = $this->flats()->count() +
+                           $this->shops()->count() +
+                           $this->lands()->count() +
+                           $this->houses()->count() +
+                           $this->chalets()->count() +
+                           $this->villas()->count() +
+                           $this->offices()->count() +
+                           $this->clinics()->count();
+
+        $this->propertiesCount = $totalProperties;
+        $this->save();
+    }
+
+    // حدث يتم تنفيذه عند إنشاء أو تحديث أو حذف عقار
+    protected static function booted()
+    {
+        static::updated(function ($broker) {
+            $broker->updatePropertiesCount();
+        });
+
+        static::created(function ($broker) {
+            $broker->updatePropertiesCount();
+        });
+
+        static::deleted(function ($broker) {
+            $broker->updatePropertiesCount();
+        });
+    }
 
     protected $hidden = [
         'password',

@@ -6,6 +6,7 @@ require __DIR__ . '/Apis/Admin/role.php';
 require __DIR__ . '/Apis/Admin/contact.php';
 require __DIR__ . '/Apis/User/contact.php';
 require __DIR__ . '/Apis/User/rating.php';
+require __DIR__ . '/Apis/User/broker.php';
 require __DIR__ . '/Apis/User/selectedProperty.php';
 require __DIR__ . '/Apis/Chalet/chalet.php';
 require __DIR__ . '/Apis/Clinic/clinic.php';
