@@ -215,19 +215,40 @@ class BrokerAuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function createNewToken($token)
-    {
-        $broker = auth()->guard('broker')->user();
-        $broker->last_login_at = Carbon::parse($broker->last_login_at)
-        ->timezone('Africa/Cairo')->format('Y-m-d H:i:s');
-        $broker = Broker::find(auth()->guard('broker')->id());
-        return response()->json([
+    // protected function createNewToken($token)
+    // {
+    //     $broker = auth()->guard('broker')->user();
+    //     $broker->last_login_at = Carbon::parse($broker->last_login_at)
+    //     ->timezone('Africa/Cairo')->format('Y-m-d H:i:s');
+    //     $broker = Broker::find(auth()->guard('broker')->id());
+    //     return response()->json([
 
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->guard('broker')->factory()->getTTL() * 60,
-            // 'broker' => auth()->guard('broker')->user(),
-            'broker' => $broker,
-        ]);
+    //         'access_token' => $token,
+    //         'token_type' => 'bearer',
+    //         'expires_in' => auth()->guard('broker')->factory()->getTTL() * 60,
+    //         // 'broker' => auth()->guard('broker')->user(),
+    //         'broker' => $broker,
+    //     ]);
+    // }
+
+    protected function createNewToken($token)
+{
+    // الحصول على المستخدم الحالي
+    $broker = auth()->guard('broker')->user();
+
+    // تأجيل التحديثات غير الضرورية بعد إرسال التوكن
+    if ($broker->last_login_at !== Carbon::now()->timezone('Africa/Cairo')->format('Y-m-d H:i:s')) {
+        $broker->last_login_at = Carbon::now()->timezone('Africa/Cairo')->format('Y-m-d H:i:s');
+        $broker->save();
     }
+
+    // إرسال التوكن والمعلومات بأسرع ما يمكن
+    return response()->json([
+        'access_token' => $token,
+        'token_type' => 'bearer',
+        'expires_in' => auth()->guard('broker')->factory()->getTTL() * 60,
+        'broker' => $broker,  // يمكن إرجاع معلومات البائع بشكل كامل هنا
+    ]);
+}
+
 }
