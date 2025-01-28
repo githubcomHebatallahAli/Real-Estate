@@ -27,7 +27,6 @@ class BrokerDashboardController extends Controller
         ->merge($broker->clinics)
         ->merge($broker->houses);
 
-    // تحديث عدد العقارات في السمسار
     $broker->propertiesCount = $properties->count();
                         $broker->save();
 
