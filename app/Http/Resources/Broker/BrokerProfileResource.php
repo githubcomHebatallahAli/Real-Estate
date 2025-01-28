@@ -30,6 +30,7 @@ class BrokerProfileResource extends JsonResource
             'locationGPS'=> $this-> locationGPS,
             'avg_rating' => number_format(round($avgRating, 1), 1),
             'ratingsCount' => $this->ratingsCount,
+            'propertiesCount'=> $this-> propertiesCount,
             'ratings' => $this->ratings->map(function ($rating) {
                 return [
                     'name' => $rating->user->name,
