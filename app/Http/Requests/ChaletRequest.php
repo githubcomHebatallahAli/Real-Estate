@@ -57,13 +57,7 @@ class ChaletRequest extends FormRequest
             'mainImage' => 'nullable|image|mimes:jpg,jpeg,png,gif,svg',
             'image.*' => 'nullable|image|mimes:jpg,jpeg,png,gif,svg',
             'video' => 'nullable|file|mimes:mp4,mov,avi,mkv,flv,wmv,webm,3gp',
-            // 'audio' => 'nullable|file|mimes:mp3,wav,aac,ogg,flac,m4a',
             'audio' => 'nullable|file|extensions:m4a,mp3,wav,aac,ogg,flac',
-
-
-
-
-
         ];
     }
 

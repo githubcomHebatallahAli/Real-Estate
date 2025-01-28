@@ -27,7 +27,6 @@ class BrokerRegisterResource extends JsonResource
             'address' => $this -> address,
             'targetPlace' => $this -> targetPlace,
             'userType' => $this -> userType,
-            // 'userType' => new UserTypeResource($this->userType),
             'commission' => $this -> commission,
             'brief' => $this -> brief,
             'realEstateType' => $this -> realEstateType,
