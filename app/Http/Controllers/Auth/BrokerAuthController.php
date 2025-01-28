@@ -52,40 +52,47 @@ class BrokerAuthController extends Controller
 
     public function login(LoginRequest $request)
     {
+        // التحقق من المدخلات
         $validator = Validator::make($request->all(), $request->rules());
 
-
+        // إذا فشل التحقق، إعادة الرد مع الأخطاء
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
-        if (!$token = auth()->guard('broker')->attempt($validator->validated())) {
+        // محاولة التحقق باستخدام البيانات المُعتمدة من التحقق
+        if (!$token = auth()->guard('broker')->attempt($request->validated())) {
             return response()->json([
-                'message' => 'Invalid data'
+                'message' => 'Invalid credentials'
             ], 422);
-
-            $broker = auth()->guard('broker')->user();
-
-            // if (is_null($broker->email_verified_at)) {
-            //     return response()->json([
-            //         'message' => 'Email not verified. Please verify it.'
-            //     ], 403);
-            // }
         }
 
+        // استرجاع المستخدم بعد التحقق
         $broker = auth()->guard('broker')->user();
+
+        // إذا كان التحقق من البريد الإلكتروني مطلوبًا
+        // يمكن إعادة تفعيل التحقق من البريد الإلكتروني هنا إذا كانت سياسة التطبيق تتطلب ذلك
+        // if (is_null($broker->email_verified_at)) {
+        //     return response()->json([ 'message' => 'Email not verified. Please verify it.' ], 403);
+        // }
+
+        // إذا كان عنوان الـ IP مختلفًا، تحديثه
         if ($broker->ip !== $request->ip()) {
             $broker->ip = $request->ip();
             $broker->save();
         }
 
+        // تحديث تاريخ آخر تسجيل دخول
         $broker->update([
             'last_login_at' => Carbon::now()->timezone('Africa/Cairo')
         ]);
 
+        // إنشاء وتقديم التوكن الجديد للمستخدم
         return $this->createNewToken($token);
     }
-    
+
+
+
     public function register(BrokerRegisterRequest $request)
     {
         $validator = Validator::make($request->all(), $request->rules());
