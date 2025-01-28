@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 class BrokerDashboardController extends Controller
 {
 
-    public function edit($brokerId)
+    public function editProperties($brokerId)
     {
 
         $broker = Broker::with([
@@ -17,6 +17,18 @@ class BrokerDashboardController extends Controller
          'chalets', 'clinics','houses'
          ])
                         ->findOrFail($brokerId);
+                        $properties = collect([])
+        ->merge($broker->flats)
+        ->merge($broker->villas)
+        ->merge($broker->shops)
+        ->merge($broker->lands)
+        ->merge($broker->offices)
+        ->merge($broker->chalets)
+        ->merge($broker->clinics)
+        ->merge($broker->houses);
+
+    $broker->propertiesCount = $properties->count();
+                        $broker->save();
 
         return response()->json($broker);
     }

@@ -50,12 +50,7 @@ class BrokerAuthController extends Controller
         return $this->createNewToken($token);
     }
 
-    /**
-     * Register an Admin.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    // Register an Admin.
+
     public function register(BrokerRegisterRequest $request)
     {
         $validator = Validator::make($request->all(), $request->rules());
@@ -118,15 +113,6 @@ class BrokerAuthController extends Controller
     }
 
 
-
-
-    /**
-     * Log the admin out (Invalidate the token).
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-
-
     public function logout()
     {
 
@@ -149,21 +135,13 @@ class BrokerAuthController extends Controller
         ]);
     }
 
-    /**
-     * Refresh a token.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
+
     public function refresh()
     {
         return $this->createNewToken(auth()->guard('broker')->refresh());
     }
 
-    /**
-     * Get the authenticated Admin.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
+
     public function userProfile()
     {
         return response()->json([
@@ -171,13 +149,7 @@ class BrokerAuthController extends Controller
         ]);
     }
 
-    /**
-     * Get the token array structure.
-     *
-     * @param  string $token
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
+
     protected function createNewToken($token)
     {
         $broker = auth()->guard('broker')->user();
@@ -193,4 +165,7 @@ class BrokerAuthController extends Controller
             'broker' => $broker,
         ]);
     }
+
+
+
 }

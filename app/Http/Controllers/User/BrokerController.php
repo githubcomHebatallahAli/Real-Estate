@@ -32,7 +32,7 @@ class BrokerController extends Controller
 
     public function showAll()
     {
-        // جلب السماسرة مع حساب المتوسط مباشرة من قاعدة البيانات
+
         $Brokers = Broker::with(['ratings' => function ($query) {
             $query->select('broker_id', DB::raw('AVG(rating) as average_rating'))
                   ->groupBy('broker_id');
@@ -55,9 +55,9 @@ class BrokerController extends Controller
 
     public function editBrokerProfile($id)
     {
-        // جلب بيانات السمسار مع جميع العقارات والتقييمات
+
         $broker = Broker::with([
-            'ratings.user', // التقييمات مع اسم المستخدم
+            'ratings.user',
             'flats.property', 'villas.property', 'shops.property', 'lands.property',
             'offices.property', 'chalets.property', 'clinics.property', 'houses.property' // جميع أنواع العقارات مع properties
         ])->findOrFail($id);
@@ -129,6 +129,8 @@ class BrokerController extends Controller
                     'totalPrice' => $house->totalPrice,
                 ];
             }));
+            $broker->propertiesCount = $properties->count();
+            $broker->save();
 
         return response()->json([
             'broker' => new BrokerProfileResource($broker),

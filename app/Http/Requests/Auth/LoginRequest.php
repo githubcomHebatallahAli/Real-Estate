@@ -26,9 +26,9 @@ class LoginRequest extends FormRequest
         return [
             // 'email' => 'nullable|email|exists:users,email',
             'phoNum'  => 'required|string',
-            'password' => 'required|string|max:255',
+            'password' => 'required|string|min:8',
 
-            // 'email' => 'required_without:phoNum', 
+            // 'email' => 'required_without:phoNum',
             // 'phoNum' => 'required_without:email',
         ];
     }

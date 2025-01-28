@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Notifications\SuccessfulRegistration;
 use App\Http\Requests\Auth\UserRegisterRequest;
 use App\Http\Resources\Auth\UserRegisterResource;
+use App\Http\Requests\Auth\VerficationPhoNumRequest;
 
 class UserAuthController extends Controller
 {
@@ -50,64 +51,8 @@ class UserAuthController extends Controller
     }
 
 
-    // public function register(UserRegisterRequest $request) {
-    //     $validator = Validator::make($request->all(), $request->rules());
-
-    //     if ($validator->fails()) {
-    //         return response()->json($validator->errors()->toJson(), 400);
-    //     }
-
-    //     $userData = array_merge(
-    //         $validator->validated(),
-    //         ['password' => bcrypt($request->password)],
-    //         ['ip' => $request->ip()],
-    //         ['userType' => $request->userType ?? 'user']
-
-    //     );
-
-    //     $user = User::create($userData);
-
-    //     if ($request->hasFile('image')) {
-
-    //         $path = $request->file('image')->store('user', 'public');
-    //         $user->image()->create(['path' => $path]);
-    //     }
-
-    //     $user->load('image');
-
-
-    //     try {
-    //         $verificationController = new VerficationController();
-
-    //         $request = new VerficationPhoNumRequest(['phoNum' => $user->phoNum]);
-
-    //         $verificationController->sendOtp($request);
-
-    //         return response()->json([
-    //             'message' => 'User registration successful. Please verify your phone number.',
-    //             'user' => new UserRegisterResource($user),
-    //             'otp_identifier' => $user->phoNum,
-    //         ], 201);
-    //     } catch (\Exception $e) {
-    //         return response()->json([
-    //             'message' => 'User registration successful. However, OTP could not be sent. Please try resending it.',
-    //             'user' => new UserRegisterResource($user),
-    //             'error' => $e->getMessage(),
-    //         ], 201);
-    //     }
-    //     return response()->json([
-    //         'message' => 'User Registration successful',
-    //         'user' =>new UserRegisterResource($user)
-    //     ]);
-    //     return response()->json([
-    //         'message' => 'User Registration successful',
-    //         'user' => new UserRegisterResource($user)
-    //     ], 201);
-    // }
-
-
-    public function register(UserRegisterRequest $request) {
-
+    public function register(UserRegisterRequest $request)
+    {
         $validator = Validator::make($request->all(), $request->rules());
 
         if ($validator->fails()) {
@@ -119,37 +64,53 @@ class UserAuthController extends Controller
             // dd($photoPath);
         }
 
-
-        $userData = array_merge(
+        $UserData = array_merge(
             $validator->validated(),
             ['password' => bcrypt($request->password)],
             ['ip' => $request->ip()],
-            ['userType' => $request->userType ?? 'user']
+            ['userType' => $request->userType ?? 'User']
         );
 
         if (isset($photoPath)) {
-            $userData['photo'] = $photoPath;
+            $UserData['photo'] = $photoPath;
         }
 
-        $user = User::create($userData);
+        $User = User::create($UserData);
 
-        if ($request->hasFile('media')) {
-            $path = $request->file('media')->store('user', 'public');
-            $user->media()->create(['path' => $path]);
+        // if ($request->hasFile('media')) {
+
+        //     $path = $request->file('media')->store('User', 'public');
+        //     $User->media()->create(['path' => $path]);
+        // }
+
+        // $User->load('media');
+
+        // $User->save();
+        // $User->notify(new EmailVerificationNotification());
+        try {
+            $verificationController = new VerficationController();
+
+            $request = new VerficationPhoNumRequest(['phoNum' => $User->phoNum]);
+
+            $verificationController->sendOtp($request);
+
+            return response()->json([
+                'message' => 'User registration successful. Please verify your phone number.',
+                'User' => new UserRegisterResource($User),
+                'otp_identifier' => $User->phoNum,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'User registration successful. However, OTP could not be sent. Please try resending it.',
+                'User' => new UserRegisterResource($User),
+                'error' => $e->getMessage(),
+            ], 201);
         }
-
-        $user->load('media');
-        $otp = rand(100000, 999999);
-        $user->notify(new SuccessfulRegistration($otp, $user->name));
-
         return response()->json([
-            'message' => 'User registration successful. Please verify your phone number.',
-            'user' => new UserRegisterResource($user),
-            'otp_identifier' => $user->phoNum,
-        ], 201);
+            'message' => 'User Registration successful',
+            'User' =>new UserRegisterResource($User)
+        ]);
     }
-
-
 
 
     public function logout()

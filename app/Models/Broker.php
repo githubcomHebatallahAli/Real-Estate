@@ -27,6 +27,7 @@ class Broker extends Authenticatable  implements JWTSubject
         'realEstateType',
         'photo',
         'ratingsCount',
+        'propertiesCount',
         'last_login_at',
         'last_logout_at',
         'session_duration',
@@ -46,10 +47,10 @@ class Broker extends Authenticatable  implements JWTSubject
 }
 
 
-    public function media()
-    {
-        return $this->morphOne(Media::class, 'mediaable');
-    }
+    // public function media()
+    // {
+    //     return $this->morphOne(Media::class, 'mediaable');
+    // }
 
     public function ratings()
     {
@@ -111,6 +112,7 @@ class Broker extends Authenticatable  implements JWTSubject
         $this->save();
     }
 
+
     protected static function booted()
     {
         static::updated(function ($broker) {
@@ -131,7 +133,7 @@ class Broker extends Authenticatable  implements JWTSubject
         'remember_token',
     ];
 
-  
+
     protected function casts(): array
     {
         return [
