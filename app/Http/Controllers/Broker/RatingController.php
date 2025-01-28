@@ -34,20 +34,6 @@ class RatingController extends Controller
         ]);
         }
 
-    public function edit(string $id)
-    {
-        $Broker = Broker::find($id);
 
-        if (!$Broker) {
-            return response()->json([
-                'message' => "Broker not found."
-            ], 404);
-        }
-
-        return response()->json([
-            'data' =>new BrokerProfileResource($Broker),
-            'message' => "Edit Broker With His Rating & Comments By ID Successfully."
-        ]);
-    }
 
 }

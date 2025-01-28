@@ -28,4 +28,17 @@ class Rating extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    protected static function booted()
+    {
+        static::created(function ($rating) {
+            $rating->broker->ratingsCount = $rating->broker->ratings()->count();
+            $rating->broker->save();
+        });
+
+        static::deleted(function ($rating) {
+            $rating->broker->ratingsCount = $rating->broker->ratings()->count();
+            $rating->broker->save();
+        });
+    }
 }

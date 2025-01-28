@@ -36,7 +36,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->integer('area');
             $table->integer('gardenArea')->nullable();
-            $table->integer('floorArea')->nullable();
+            $table->integer('roofArea')->nullable();
             $table->string('ownerType')->nullable();
             $table->integer('totalPrice')->nullable();
             $table->integer('installmentPrice')->nullable();
