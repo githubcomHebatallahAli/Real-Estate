@@ -14,83 +14,41 @@ use App\Http\Requests\Auth\VerficationPhoNumRequest;
 
 class BrokerAuthController extends Controller
 {
-    // public function login(LoginRequest $request)
-    // {
-    //     $validator = Validator::make($request->all(), $request->rules());
-
-
-    //     if ($validator->fails()) {
-    //         return response()->json($validator->errors(), 422);
-    //     }
-
-    //     if (!$token = auth()->guard('broker')->attempt($validator->validated())) {
-    //         return response()->json([
-    //             'message' => 'Invalid data'
-    //         ], 422);
-
-    //     }
-
-    //     $broker = auth()->guard('broker')->user();
-
-    //     // if (!$broker->is_verified) {
-    //     //     return response()->json([
-    //     //         'message' => 'Your account is not verified. Please verify your phone number.'
-    //     //     ], 403);
-    //     // }
-
-    //     if ($broker->ip !== $request->ip()) {
-    //         $broker->ip = $request->ip();
-    //         $broker->save();
-    //     }
-
-    //     $broker->update([
-    //         'last_login_at' => Carbon::now()->timezone('Africa/Cairo')
-    //     ]);
-
-    //     return $this->createNewToken($token);
-    // }
-
     public function login(LoginRequest $request)
     {
-        // التحقق من المدخلات
         $validator = Validator::make($request->all(), $request->rules());
 
-        // إذا فشل التحقق، إعادة الرد مع الأخطاء
+
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
-        // محاولة التحقق باستخدام البيانات المُعتمدة من التحقق
-        if (!$token = auth()->guard('broker')->attempt($request->validated())) {
+        if (!$token = auth()->guard('broker')->attempt($validator->validated())) {
             return response()->json([
-                'message' => 'Invalid credentials'
+                'message' => 'Invalid data'
             ], 422);
+
         }
 
-        // استرجاع المستخدم بعد التحقق
         $broker = auth()->guard('broker')->user();
 
-        // إذا كان التحقق من البريد الإلكتروني مطلوبًا
-        // يمكن إعادة تفعيل التحقق من البريد الإلكتروني هنا إذا كانت سياسة التطبيق تتطلب ذلك
-        // if (is_null($broker->email_verified_at)) {
-        //     return response()->json([ 'message' => 'Email not verified. Please verify it.' ], 403);
+        // if (!$broker->is_verified) {
+        //     return response()->json([
+        //         'message' => 'Your account is not verified. Please verify your phone number.'
+        //     ], 403);
         // }
 
-        // إذا كان عنوان الـ IP مختلفًا، تحديثه
         if ($broker->ip !== $request->ip()) {
             $broker->ip = $request->ip();
             $broker->save();
         }
 
-        // تحديث تاريخ آخر تسجيل دخول
         $broker->update([
             'last_login_at' => Carbon::now()->timezone('Africa/Cairo')
         ]);
 
-        // إنشاء وتقديم التوكن الجديد للمستخدم
         return $this->createNewToken($token);
     }
-
 
 
     public function register(BrokerRegisterRequest $request)
@@ -155,15 +113,6 @@ class BrokerAuthController extends Controller
     }
 
 
-
-
-    /**
-     * Log the admin out (Invalidate the token).
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-
-
     public function logout()
     {
 
@@ -186,21 +135,13 @@ class BrokerAuthController extends Controller
         ]);
     }
 
-    /**
-     * Refresh a token.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
+
     public function refresh()
     {
         return $this->createNewToken(auth()->guard('broker')->refresh());
     }
 
-    /**
-     * Get the authenticated Admin.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
+
     public function userProfile()
     {
         return response()->json([
@@ -208,47 +149,23 @@ class BrokerAuthController extends Controller
         ]);
     }
 
-    /**
-     * Get the token array structure.
-     *
-     * @param  string $token
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    // protected function createNewToken($token)
-    // {
-    //     $broker = auth()->guard('broker')->user();
-    //     $broker->last_login_at = Carbon::parse($broker->last_login_at)
-    //     ->timezone('Africa/Cairo')->format('Y-m-d H:i:s');
-    //     $broker = Broker::find(auth()->guard('broker')->id());
-    //     return response()->json([
-
-    //         'access_token' => $token,
-    //         'token_type' => 'bearer',
-    //         'expires_in' => auth()->guard('broker')->factory()->getTTL() * 60,
-    //         // 'broker' => auth()->guard('broker')->user(),
-    //         'broker' => $broker,
-    //     ]);
-    // }
 
     protected function createNewToken($token)
-{
-    // الحصول على المستخدم الحالي
-    $broker = auth()->guard('broker')->user();
+    {
+        $broker = auth()->guard('broker')->user();
+        $broker->last_login_at = Carbon::parse($broker->last_login_at)
+        ->timezone('Africa/Cairo')->format('Y-m-d H:i:s');
+        $broker = Broker::find(auth()->guard('broker')->id());
+        return response()->json([
 
-    // تأجيل التحديثات غير الضرورية بعد إرسال التوكن
-    if ($broker->last_login_at !== Carbon::now()->timezone('Africa/Cairo')->format('Y-m-d H:i:s')) {
-        $broker->last_login_at = Carbon::now()->timezone('Africa/Cairo')->format('Y-m-d H:i:s');
-        $broker->save();
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth()->guard('broker')->factory()->getTTL() * 60,
+            // 'broker' => auth()->guard('broker')->user(),
+            'broker' => $broker,
+        ]);
     }
 
-    // إرسال التوكن والمعلومات بأسرع ما يمكن
-    return response()->json([
-        'access_token' => $token,
-        'token_type' => 'bearer',
-        'expires_in' => auth()->guard('broker')->factory()->getTTL() * 60,
-        'broker' => $broker,  // يمكن إرجاع معلومات البائع بشكل كامل هنا
-    ]);
-}
+
 
 }
