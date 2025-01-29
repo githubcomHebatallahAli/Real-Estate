@@ -38,7 +38,7 @@ class BrokerPropertiesResource extends JsonResource
                 return [
                     'id' => $property->id,
                     'mainImage' => $property->mainImage,
-                    'address' => $property->address,
+                    'address' => "{$property->governorate}, {$property->city}, {$property->district}, {$property->street}",
                     'creationDate' => $property->creationDate,
                     'sale' => $property->sale,
                     'status' => $property->status,
