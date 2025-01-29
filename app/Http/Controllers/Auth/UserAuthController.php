@@ -115,7 +115,6 @@ class UserAuthController extends Controller
 
     public function logout()
 {
-
     $user = auth()->guard('api')->user();
 
     if ($user->last_login_at) {
@@ -156,9 +155,6 @@ class UserAuthController extends Controller
             'token_type' => 'bearer',
             'expires_in' => auth()->guard('api')->factory()->getTTL() * 60,
             'user' => auth()->guard('api')->user(),
-
-
-
         ]);
     }
 }

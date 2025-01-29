@@ -152,17 +152,20 @@ class BrokerAuthController extends Controller
 
     protected function createNewToken($token)
     {
+        // $broker = auth()->guard('broker')->user();
+        // $broker->last_login_at = Carbon::parse($broker->last_login_at)
+        // ->timezone('Africa/Cairo')->format('Y-m-d H:i:s');
+        // $broker = Broker::find(auth()->guard('broker')->id());
         $broker = auth()->guard('broker')->user();
         $broker->last_login_at = Carbon::parse($broker->last_login_at)
         ->timezone('Africa/Cairo')->format('Y-m-d H:i:s');
-        $broker = Broker::find(auth()->guard('broker')->id());
         return response()->json([
 
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->guard('broker')->factory()->getTTL() * 60,
-            // 'broker' => auth()->guard('broker')->user(),
-            'broker' => $broker,
+            'broker' => auth()->guard('broker')->user(),
+            // 'broker' => $broker,
         ]);
     }
 

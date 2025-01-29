@@ -14,6 +14,36 @@ class BrokerPropertiesResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'photo' => $this->photo,
+            'propertiesCount' => $this->propertiesCount,
+            'properties' => $this->getProperties(),
+        ];
+    }
+
+    private function getProperties()
+    {
+        return collect([])
+            ->merge($this->flats)
+            ->merge($this->villas)
+            ->merge($this->shops)
+            ->merge($this->lands)
+            ->merge($this->offices)
+            ->merge($this->chalets)
+            ->merge($this->clinics)
+            ->merge($this->houses)
+            ->map(function ($property) {
+                return [
+                    'id' => $property->id,
+                    'mainImage' => $property->mainImage,
+                    'address' => $property->address,
+                    'creationDate' => $property->creationDate,
+                    'sale' => $property->sale,
+                    'status' => $property->status,
+                    'totalPrice' => $property->totalPrice,
+                ];
+            });
     }
 }
