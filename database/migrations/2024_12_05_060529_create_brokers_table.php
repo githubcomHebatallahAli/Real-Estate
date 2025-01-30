@@ -18,16 +18,12 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('governorate');
+            $table->string('center')->nullable();
             $table->string('address');
-            $table->string('phoNum')->unique();
-            $table->string('commission');
-            $table->text('brief')->nullable();
+            $table->string('phoNum')->unique()->nullable();
             $table->string('userType')->default('broker')->nullable();
             $table->boolean('is_verified')->default(false);
             $table->timestamp('otp_sent_at')->nullable();
-            $table->string('targetPlace');
-            $table->string('realEstateType');
-            $table->string('photo')->nullable();
             $table->string('ip')->nullable();
             $table->timestamp('last_login_at')->nullable();
             $table->timestamp('last_logout_at')->nullable();
