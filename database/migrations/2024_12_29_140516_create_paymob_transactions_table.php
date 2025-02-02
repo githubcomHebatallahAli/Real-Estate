@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('special_reference')->nullable()->unique();
             $table->string('paymob_order_id')->nullable();
             $table->foreignId('payment_method_id')->constrained('paymob_methods')->cascadeOnDelete();
-            $table->foreignId('broker_id')->nullable()->constrained('brokers')->cascadeOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
             $table->foreignId('package_id')->nullable()->constrained('packages')->cascadeOnDelete();
             $table->decimal('price', 10, 2);
             $table->string('currency')->default('EGP');

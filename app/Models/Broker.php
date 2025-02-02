@@ -12,22 +12,19 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class Broker extends Authenticatable  implements JWTSubject
 {
     use HasFactory, Notifiable, SoftDeletes;
-    const PHOTO_FOLDER = 'Broker';
     protected $fillable = [
         'name',
         'email',
         'password',
         'governorate',
+        'center',
         'address',
         'phoNum',
-        'targetPlace',
         'userType',
-        'commission',
-        'brief',
-        'realEstateType',
-        'photo',
         'ratingsCount',
         'propertiesCount',
+        'purchaseOperationsCount',
+        'sellingOperationsCount',
         'last_login_at',
         'last_logout_at',
         'session_duration',
@@ -47,10 +44,11 @@ class Broker extends Authenticatable  implements JWTSubject
 }
 
 
-    // public function media()
-    // {
-    //     return $this->morphOne(Media::class, 'mediaable');
-    // }
+public function profile()
+{
+    return $this->hasOne(BrokerProfile::class);
+}
+
 
     public function ratings()
     {

@@ -23,10 +23,9 @@ class UserRegisterResource extends JsonResource
             'email'=>$this->email,
             'phoNum' => $this -> phoNum ,
             'governorate' => $this -> governorate,
+            'center' => $this -> center,
             'address' => $this -> address,
-            // 'userType' => new UserTypeResource($this->userType),
             'userType' => $this -> userType,
-            'photo'=>$this->photo,
         ];
     }
 }

@@ -20,8 +20,12 @@ return new class extends Migration
             $table->string('governorate');
             $table->string('center')->nullable();
             $table->string('address');
-            $table->string('userType')->default('user')->nullable();
-            $table->string('phoNum')->unique()->nullable();
+            $table->enum('userType', ['user', 'broker'])->default('user')->nullable();
+            $table->string('phoNum')->unique();
+            $table->unsignedBigInteger('purchaseOperationsCount')->default(0);
+            $table->unsignedBigInteger('sellingOperationsCount')->default(0);
+            $table->unsignedBigInteger('ratingsCount')->default(0);
+            $table->unsignedBigInteger('propertiesCount')->default(0);
             $table->boolean('is_verified')->default(false);
             $table->timestamp('otp_sent_at')->nullable();
             $table->string('ip')->nullable();

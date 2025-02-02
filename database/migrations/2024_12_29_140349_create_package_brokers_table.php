@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('package_brokers', function (Blueprint $table) {
+        Schema::create('package_users', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('broker_id')->constrained('brokers')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('package_id')->constrained('packages')->cascadeOnDelete();
             $table->date('startDate')->nullable();
             $table->date('endDate')->nullable();

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('ratings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('broker_id')->constrained('brokers')->cascadeOnDelete();
+            // $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->integer('rating')->checkBetween(1,5)->nullable();
             $table->text('comment')->nullable();
             $table->integer('transactionNum')->nullable();

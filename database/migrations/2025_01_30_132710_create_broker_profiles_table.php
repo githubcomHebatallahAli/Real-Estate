@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('broker_profiles', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('email')->unique()->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('commission');
@@ -21,8 +22,6 @@ return new class extends Migration
             $table->string('realEstateType');
             $table->string('photo')->nullable();
             $table->string('birthDate')->nullable();
-            $table->string('purchaseOperations')->nullable();
-            $table->string('sellingOperations')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

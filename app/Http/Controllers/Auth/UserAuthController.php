@@ -59,10 +59,10 @@ class UserAuthController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        if ($request->hasFile('photo')) {
-            $photoPath = $request->file('photo')->store(User::PHOTO_FOLDER);
-            // dd($photoPath);
-        }
+        // if ($request->hasFile('photo')) {
+        //     $photoPath = $request->file('photo')->store(User::PHOTO_FOLDER);
+        //     // dd($photoPath);
+        // }
 
         $UserData = array_merge(
             $validator->validated(),
@@ -71,9 +71,9 @@ class UserAuthController extends Controller
             ['userType' => $request->userType ?? 'User']
         );
 
-        if (isset($photoPath)) {
-            $UserData['photo'] = $photoPath;
-        }
+        // if (isset($photoPath)) {
+        //     $UserData['photo'] = $photoPath;
+        // }
 
         $User = User::create($UserData);
 

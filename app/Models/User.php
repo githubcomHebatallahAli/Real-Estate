@@ -12,22 +12,25 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable, SoftDeletes;
-    const PHOTO_FOLDER = 'User';
 
     protected $fillable = [
         'name',
         'email',
         'password',
         'governorate',
+        'center',
         'address',
         'phoNum',
         'userType',
-        'photo',
         'last_login_at',
         'last_logout_at',
         'session_duration',
         'is_verified',
         'otp_sent_at',
+        'purchaseOperationsCount',
+        'sellingOperationsCount',
+        'ratingsCount',
+        'propertiesCount'
     ];
 
 
@@ -36,10 +39,7 @@ class User extends Authenticatable implements JWTSubject
         return $this->phoNum;
     }
 
-    public function media()
-    {
-        return $this->morphOne(Media::class, 'mediaable');
-    }
+
 
     public function flats()
     {
@@ -80,6 +80,11 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Office::class);
     }
+
+    public function profile()
+{
+    return $this->hasOne(UserProfile::class);
+}
 
     protected $hidden = [
         'password',

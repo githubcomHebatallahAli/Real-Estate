@@ -13,10 +13,9 @@ return new class extends Migration
     {
         Schema::create('user_profiles', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('photo')->nullable();
             $table->string('birthDate')->nullable();
-            $table->string('purchaseOperations')->nullable();
-            $table->string('sellingOperations')->nullable();
             $table->string('email')->unique()->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->softDeletes();
